@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="zxx">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Truck Message</title>
+
+    <!-- Place favicon.png in the root directory -->
+    <link rel="shortcut icon" href="%PUBLIC_URL%/assets/img/favicon-01.png" type="image/x-icon" />
+
+    <link rel="stylesheet" href="%PUBLIC_URL%/assets/css/font-icons.css">
+    <link rel="stylesheet" href="%PUBLIC_URL%/assets/css/plugins.css">
+    <link rel="stylesheet" href="%PUBLIC_URL%/assets/css/style.css">
+    <link rel="stylesheet" href="%PUBLIC_URL%/assets/css/responsive.css">
+    <link rel="stylesheet" href="%PUBLIC_URL%/assets/css/custom.css">
+    <link rel="stylesheet" href="%PUBLIC_URL%/assets/css/_portfoli.css">
+
+    
+
+
+    <script type="text/javascript">
+        // Single Page Apps for GitHub Pages
+        // MIT License
+        // https://github.com/rafgraph/spa-github-pages
+        // This script checks to see if a redirect is present in the query string,
+        // converts it back into the correct url and adds it to the
+        // browser's history using window.history.replaceState(...),
+        // which won't cause the browser to attempt to load the new url.
+        // When the single page app is loaded further down in this file,
+        // the correct url will be waiting in the browser's history for
+        // the single page app to route accordingly.
+        (function(l) {
+          if (l.search[1] === '/' ) {
+            var decoded = l.search.slice(1).split('&').map(function(s) { 
+              return s.replace(/~and~/g, '&')
+            }).join('?');
+            window.history.replaceState(null, null,
+                l.pathname.slice(0, -1) + decoded + l.hash
+            );
+          }
+        }(window.location))
+      </script>
+</head>
+<body>
+
+    <div class="quarter-overlay">
+        <div class="cv-spinner">
+            <span class="spinner"></span>
+        </div>
+    </div>
+
+    <div class="page-wrapper">
+
+      <div id="quarter"></div>
+  </div>
+  
+    <script src="%PUBLIC_URL%/assets/js/plugins.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.7/dist/umd/popper.min.js"></script>
+    <script type='text/javascript' src='https://www.mypetrolprice.com/Embed/script/EmbedJS.js'></script>
+
+    <script
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA09V2FtRwNpWu7Xh8hc7nf-HOqO7rbFqw&libraries=places"
+    async
+    defer>
+</script>
+</body>
+</html>

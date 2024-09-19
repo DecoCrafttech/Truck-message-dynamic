@@ -1,0 +1,224 @@
+/* App.css */
+.App {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.signin-container {
+  width: 300px;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+input[type='text'],
+input[type='tel'] {
+  width: 100%;
+  padding: 8px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+button {
+  width: 100%;
+  padding: 10px;
+  background-color: #ffffff;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.verified-toast,
+.failed-toast {
+  margin-top: 10px;
+  padding: 10px;
+  border-radius: 5px;
+}
+/* SignInPage.css */
+.signin-parent-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 200px;
+  margin-bottom: 100px
+}
+
+.signin-container {
+  width: 400px;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  background-color: #fff;
+}
+
+h2 {
+  margin-bottom: 20px;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+label {
+  display: block;
+  /* font-weight: bold; */
+}
+
+input[type="text"],
+input[type="tel"] {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+button[type="submit"] {
+  width: 100%;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  background-color: #007bff;
+  color: #fff;
+  cursor: pointer;
+}
+
+button[type="submit"]:hover {
+  background-color: #0056b3;
+}
+
+button[type="submit"]:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+/* .para {
+  margin-top: 20px;
+  text-align: center;
+  font-size: 16px;
+} */
+
+
+
+.footercls {
+  color: #ffffff;
+  text-decoration: none;
+  font-size: 16px;
+  font-weight: 400;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+
+.verified-toast {
+  background-color: #4caf50;
+}
+
+.failed-toast {
+  background-color: #f44336;
+}
+
+@media (max-width: 400px) {
+  .signin-container {
+    width: 90%;
+  }
+}
+
+.cardmodifyhead {
+  /* margin-bottom: 20px;
+  margin-right: 10px; */
+  /* margin: 20px; */
+  font-size: 22px;
+  font-weight: 800;
+  background-color: rgb(240, 246, 255);
+  padding: 20px 0px 20px 0px;
+  
+  border-radius: 5px;
+  text-align: center;
+  }
+
+.cardmodify {
+/* margin-bottom: 20px;
+margin-right: 10px; */
+/* margin: 20px; */
+font-size: 16px;
+font-weight: 800;
+background-color: #e0ecff;
+padding: 20px 0px 20px 0px;
+
+border-radius: 5px;
+text-align: center;
+}
+
+.paragraph{
+  text-align: left;
+}
+.card-title {
+  margin-bottom: 0rem;
+  font-weight: 800;
+  font-size: 16px;
+  color: #1c1c1c;
+  
+}
+
+.cardshadow {
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  outline: none;
+  -moz-osx-font-smoothing: grayscale;
+  /* Firefox */
+  -webkit-font-smoothing: antialiased;
+  /* WebKit  */
+}
+
+.truckcard{
+  border-radius: 8px;
+  border: none;
+  box-shadow: #ffffff;
+}
+
+.cardbutton{
+  color: #ffffff;
+  background-color: #CE0A3A;
+  border-radius: 5px;
+}
+:hover.cardbutton{
+  color: #fff;
+  background-color: #a40000;
+
+}
+
+.cardicon{
+  display: inline-block;
+  position: relative;
+  font-size: 15px;
+  margin-top: 0;
+  font-weight: 400 !important;
+  color: #4e4e4e;
+}
+
+
+.cardicontext{
+  display: inline-block;
+  position: relative;
+  font-size: 14px;
+  margin-top: 0;
+  color: #333333;
+}

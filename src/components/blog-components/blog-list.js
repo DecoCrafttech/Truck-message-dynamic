@@ -4,19 +4,29 @@ import toast from "react-hot-toast";
 import { FaUserAlt } from "react-icons/fa";
 import { FaIndianRupeeSign, FaTruckFast } from "react-icons/fa6";
 import { BsFillCalendar2DateFill } from "react-icons/bs";
-import { RiPinDistanceFill } from "react-icons/ri";
+import { RiMapPinTimeFill, RiPinDistanceFill } from "react-icons/ri";
 import { FaLocationDot } from "react-icons/fa6";
 import { Link } from "react-router-dom";
 import Cookies from "js-cookie";
 import { useSelector } from "react-redux";
 import Autocomplete from "react-google-autocomplete";
 import shortid from "https://cdn.skypack.dev/shortid@2.2.16";
+import Select from "react-dropdown-select";
 
 const BlogList = () => {
   const LoginDetails = useSelector((state) => state.login);
 
   const [yearData, setYearData] = useState([]);
   const truckBodyType = ["LCV", "Container", "Open body vehicle", "Tanker", "Trailer", "Tipper", "Bus "];
+  const tonnage = [
+    { value: 1, label: '1 Ton - 2.5 Ton' },
+    { value: 2, label: '2.5 Ton - 5 Ton' },
+    { value: 3, label: '5 Ton - 10 Ton' },
+    { value: 4, label: '10 Ton - 20 Ton' },
+    { value: 5, label: '20 Ton - 40 Ton' },
+    { value: 6, label: 'Above 40 Ton' }
+  ];
+
   const truckBrand = [
     "Ashok Leyland",
     "Tata",
@@ -101,7 +111,8 @@ const BlogList = () => {
     location: "",
     truck_body_type: '',
     no_of_tyres: '',
-    price: ''
+    price: '',
+    tonnage: []
   });
 
   const [showingBuyAndSellLocation, setShowingBuyAndSellLocation] = useState("");
@@ -122,6 +133,7 @@ const BlogList = () => {
   const [showingFromLocation, setShowingFromLocation] = useState("");
   const [showingToLocation, setShowingToLocation] = useState("");
   const [isDataFiltered, setIsDataFiltered] = useState(false);
+  const [selectBoxtonnage, setSelectBoxTonnage] = useState([])
 
   const handleLocation = (selectedLocation) => {
     if (selectedLocation) {
@@ -180,6 +192,7 @@ const BlogList = () => {
           }
         })
         setCards(reOrder)
+        setCurrentPage(1)
 
         toast.success(res.data.message);
         document.getElementById("closeFilterBox").click();
@@ -195,6 +208,7 @@ const BlogList = () => {
   const handleClearFilter = () => {
     setclearFilterLoading(true)
     initialRender();
+    setSelectBoxTonnage([])
   }
 
   const filterCards = (cards) => {
@@ -229,7 +243,8 @@ const BlogList = () => {
     tone: "",
     truck_body_type: "",
     model: "",
-    brand: ''
+    brand: '',
+    tonnage: []
   });
 
   useEffect(() => {
@@ -267,7 +282,8 @@ const BlogList = () => {
             location: "",
             truck_body_type: '',
             no_of_tyres: '',
-            price: ''
+            price: '',
+            tonnage: []
           })
         })
         .catch((error) => {
@@ -380,8 +396,10 @@ const BlogList = () => {
     formData.append("vehicle_number", edit.vehicle_number);
     formData.append("truck_body_type", editingData.truck_body_type)
     formData.append("no_of_tyres", editingData.no_of_tyres)
+    formData.append("tonnage", editingData.tonnage.length > 0 ? [`${editingData.tonnage} Ton `] : [])
 
-    if (editingData.no_of_tyres || editingData.truck_body_type || edit.vehicle_number || edit.owner_name || edit.brand || edit.contact_no || edit.price || edit.kms_driven || showingBuyAndSellLocation || edit.model) {
+
+    if (editingData.tonnage.length > 0 || editingData.no_of_tyres || editingData.truck_body_type || edit.vehicle_number || edit.owner_name || edit.brand || edit.contact_no || edit.price || edit.kms_driven || showingBuyAndSellLocation || edit.model) {
       if (multipleImages.length > 0) {
         setCreateVehicleLoading(true);
 
@@ -731,8 +749,9 @@ const BlogList = () => {
                   <input
                     type="number"
                     name="kms driven"
-                    className="w-100 py-3"
+                    className="w-100 py-3 mt-2 m-0"
                     placeholder="Type Kms driven"
+                    min={1}
                     value={editingData.kms_driven}
                     onChange={(e) =>
                       setEditingData({
@@ -751,8 +770,9 @@ const BlogList = () => {
                   <input
                     type="number"
                     name="kms driven"
-                    className="w-100 py-3"
+                    className="w-100 py-3 mt-2 m-0"
                     placeholder="Enter your Price here..."
+                    min={1}
                     value={editingData.price}
                     onChange={(e) =>
                       setEditingData({
@@ -765,7 +785,28 @@ const BlogList = () => {
                 </div>
               </div>
 
-              <div className="col-12 col-md-6 m-0">
+              <div className="col-12 col-md-6 mt-4">
+                <h6>Tonnage</h6>
+                <div className="tel-item">
+                  <input
+                    type="number"
+                    name="Tonnage"
+                    className="w-100 py-3 mt-2 m-0"
+                    placeholder="Enter your ton..."
+                    min={1}
+                    value={editingData.tonnage.length > 0 ? `${editingData.tonnage[0]}` : ''}
+                    onChange={(e) =>
+                      setEditingData({
+                        ...editingData,
+                        tonnage: [e.target.value]
+                      })
+                    }
+                    required
+                  />
+                </div>
+              </div>
+
+              <div className="col-12 col-md-6 mt-4">
                 <h6>Contact Number</h6>
                 <div className="input-item input-item-email">
                   <input
@@ -788,7 +829,7 @@ const BlogList = () => {
                 </div>
               </div>
 
-              <div className="col-12 col-md-6 m-0">
+              <div className="col-12 col-md-6 mt-4">
                 <h6>Location</h6>
                 <div className="input-item input-item-name">
                   <Autocomplete
@@ -809,7 +850,7 @@ const BlogList = () => {
                 </div>
               </div>
 
-              <div className="col-12 col-md-6 mt-2">
+              <div className="col-12 col-md-6 mt-4">
                 <h6>Truck Body Type</h6>
                 <button type="button" class="btn btn-transparent shadow-none border dropdown-toggle col-12 py-3 dropdown-arrow text-start" data-bs-toggle="dropdown" aria-expanded="false">
                   {editingData.truck_body_type === '' ? 'select body type' : `${editingData.truck_body_type}`}
@@ -825,7 +866,7 @@ const BlogList = () => {
                 </ul >
               </div>
 
-              <div className="col-12 col-md-6 mt-2">
+              <div className="col-12 col-md-6 mt-4">
                 <h6>No. of Tyres</h6>
                 <button type="button" class="btn btn-transparent shadow-none border dropdown-toggle col-12 py-3 dropdown-arrow text-start" data-bs-toggle="dropdown" aria-expanded="false">
                   {editingData.no_of_tyres === '' ? 'select number of tyres' : `${editingData.no_of_tyres}`}
@@ -905,7 +946,7 @@ const BlogList = () => {
 
             <div className="row">
               <div className="col-12">
-                <h6>Descriptions </h6>
+                <h6>Descriptions(Optional) </h6>
                 <div className="input-item input-item-textarea">
                   <textarea
                     name="description"
@@ -958,6 +999,13 @@ const BlogList = () => {
         break;
     }
   };
+
+  const handleApplyFilterTonnage = e => {
+    setSelectBoxTonnage(e)
+    var edittTon = e.map((v) => v.label)
+
+    SetfilterModelData({ ...filterModelData, tonnage: edittTon })
+  }
 
   return (
     <div>
@@ -1029,23 +1077,10 @@ const BlogList = () => {
                     </div>
                   </div>
 
-                  {/* <div className="col-12 p-0">
-                    <h6>Vehicle Number</h6>
-                    <input
-                      type="tel"
-                      name="contact_no"
-                      className="tel-input-height mb-0"
-                      placeholder="Vehicle Number"
-                      value={filterModelData.vehicle_number}
-                      onChange={(e) =>
-                        SetfilterModelData({
-                          ...filterModelData,
-                          vehicle_number: e.target.value,
-                        })
-                      }
-                      required
-                    />
-                  </div> */}
+                  <div className="col-12 px-0">
+                    <h6>Tonnage</h6>
+                    <Select multi options={tonnage} values={selectBoxtonnage} onChange={handleApplyFilterTonnage} />
+                  </div>
 
                   <div className="col-12 px-0">
                     <h6>Kilometers driven</h6>
@@ -1247,6 +1282,11 @@ const BlogList = () => {
                   onChange={(e) => setShowingToLocation(e.target.value)}
                 />
               </div>
+            </div>
+
+            <div className="col-12 px-0">
+              <h6>Tonnage</h6>
+              <Select multi options={tonnage} values={selectBoxtonnage} onChange={handleApplyFilterTonnage} />
             </div>
 
             <div className="col-12 px-0">
@@ -1464,10 +1504,10 @@ const BlogList = () => {
                                         ></i>
                                       </span>
                                     ))}
-                                    <span>({card.user_review_count} 4)</span>
+                                    <span>({card.user_review_count})</span>
                                     <p className="float-end mb-0 text-b">
                                       {" "}
-                                      <strong>Posts </strong> {card.user_post}
+                                      <strong>Posts </strong> ({card.user_post})
                                     </p>
                                   </p>
                                   <h5 className="card-title mt-2 text-wrap">
@@ -1482,6 +1522,7 @@ const BlogList = () => {
                                 {card.location}
                               </label>
                             </div>
+                            <p className='datetext mb-3'><strong><RiMapPinTimeFill className='me-2' />Posted on :</strong> {card.updt.slice(5, 25)}</p>
                             <div>
                               <div className="row">
                                 <div className="col-6 col-md-6 cardicontext">
@@ -1516,7 +1557,7 @@ const BlogList = () => {
                                 className="apara"
                                 onClick={() => handleSaveBusAndSellId(card)}
                               >
-                                view details{" "}
+                                view details {" "}
                               </Link>{" "}
                               <link></link>
                             </div>

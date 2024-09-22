@@ -1400,6 +1400,7 @@ const WishList = () => {
                       {editingData.no_of_tyres === '' ? 'select no of tyres' : `${editingData.no_of_tyres} `}
                     </button>
                     <ul class="dropdown-menu  cup shadow-0 col-11 dropdown-ul">
+                      <li onClick={() => setEditingData({ ...editingData, no_of_tyres: 4 })} className="cup mt-0 py-2 dropdown-list-hover"><a class="dropdown-item text-decoration-none">4</a></li>
                       <li onClick={() => setEditingData({ ...editingData, no_of_tyres: 6 })} className="cup mt-0 py-2 dropdown-list-hover"><a class="dropdown-item text-decoration-none">6</a></li>
                       <li onClick={() => setEditingData({ ...editingData, no_of_tyres: 10 })} className="cup mt-0 py-2 dropdown-list-hover"><a class="dropdown-item text-decoration-none">10</a></li>
                       <li onClick={() => setEditingData({ ...editingData, no_of_tyres: 12 })} className="cup mt-0 py-2 dropdown-list-hover"><a class="dropdown-item text-decoration-none">12</a></li>
@@ -1636,6 +1637,8 @@ const WishList = () => {
                     <ul class="dropdown-menu  cup shadow-0 col-11 dropdown-ul">
                       <li onClick={() => setEditingData({ ...editingData, truck_body_type: 'open_body' })} className="cup mt-0 py-2 dropdown-list-hover"><a class="dropdown-item text-decoration-none">open_body</a></li>
                       <li onClick={() => setEditingData({ ...editingData, truck_body_type: 'Container' })} className="cup mt-0 py-2 dropdown-list-hover"><a class="dropdown-item text-decoration-none">Container</a></li>
+                      <li onClick={() => setEditingData({ ...editingData, truck_body_type: 'lcv' })} className="cup mt-0 py-2 dropdown-list-hover"><a class="dropdown-item text-decoration-none">lcv</a></li>
+                      <li onClick={() => setEditingData({ ...editingData, truck_body_type: 'tipper' })} className="cup mt-0 py-2 dropdown-list-hover"><a class="dropdown-item text-decoration-none">tipper</a></li>
                       <li onClick={() => setEditingData({ ...editingData, truck_body_type: 'trailer' })} className="cup mt-0 py-2 dropdown-list-hover"><a class="dropdown-item text-decoration-none">trailer</a></li>
                       <li onClick={() => setEditingData({ ...editingData, truck_body_type: 'tanker' })} className="cup mt-0 py-2 dropdown-list-hover"><a class="dropdown-item text-decoration-none">tanker</a></li>
                     </ul>
@@ -1647,6 +1650,7 @@ const WishList = () => {
                       {editingData.no_of_tyres === '' ? 'select no of tyres' : `${editingData.no_of_tyres} `}
                     </button>
                     <ul class="dropdown-menu  cup shadow-0 col-11 dropdown-ul">
+                      <li onClick={() => setEditingData({ ...editingData, no_of_tyres: 4 })} className="cup mt-0 py-2 dropdown-list-hover"><a class="dropdown-item text-decoration-none">4</a></li>
                       <li onClick={() => setEditingData({ ...editingData, no_of_tyres: 6 })} className="cup mt-0 py-2 dropdown-list-hover"><a class="dropdown-item text-decoration-none">6</a></li>
                       <li onClick={() => setEditingData({ ...editingData, no_of_tyres: 10 })} className="cup mt-0 py-2 dropdown-list-hover"><a class="dropdown-item text-decoration-none">10</a></li>
                       <li onClick={() => setEditingData({ ...editingData, no_of_tyres: 12 })} className="cup mt-0 py-2 dropdown-list-hover"><a class="dropdown-item text-decoration-none">12</a></li>

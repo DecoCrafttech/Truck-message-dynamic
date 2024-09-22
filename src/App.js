@@ -31,7 +31,7 @@ function App() {
           <Route path="/" element={<Service />} />
           <Route path="/my_profile" element={<Profile />} /> 
           <Route path="/load-availability" element={<Loadavailablity />} />
-          <Route path="/truck_availability" element={<truck_availability />} />
+          {/* <Route path="/truck_availability" element={<truck_availability />} /> */}
           <Route path="/coming-soon" element={<ComingSoon />} />
 
           <Route path="/product-details" element={<ProdductDetails />} />

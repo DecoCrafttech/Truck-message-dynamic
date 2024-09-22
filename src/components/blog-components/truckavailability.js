@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useRef } from 'react';
-import toast, { Toaster } from 'react-hot-toast';
+import React, { useState, useEffect } from 'react';
+import toast from 'react-hot-toast';
 import axios from 'axios';
 import { FaWeightHanging, FaTruck, FaLocationDot, FaTruckFast } from "react-icons/fa6";
 import { SiMaterialformkdocs } from "react-icons/si";
@@ -11,6 +11,7 @@ import Autocomplete from "react-google-autocomplete";
 import { HiOutlineOfficeBuilding } from 'react-icons/hi';
 import Select from 'react-dropdown-select';
 import axiosInstance from '../../Services/axiosInstance';
+import { RiMapPinTimeFill } from 'react-icons/ri';
 
 
 const TruckAvailability = () => {
@@ -313,6 +314,7 @@ const TruckAvailability = () => {
                 })
 
                 setCards(reOrder)
+                setCurrentPage(1)
 
                 toast.success(res.data.message)
                 document.getElementById("closeFilterBox").click()
@@ -703,7 +705,7 @@ const TruckAvailability = () => {
                         </div>
 
                         <div className="col-12 col-md-12">
-                            <h6>Descriptions </h6>
+                            <h6>Descriptions(Optional) </h6>
                             <div className="input-item input-item-textarea ltn__custom-icon">
                                 <textarea name="description" placeholder="Enter a text here" value={editingData.description} onChange={(e) => setEditingData({
                                     ...editingData, description: e.target.value
@@ -978,9 +980,7 @@ const TruckAvailability = () => {
                                                     <div className="col-lg-12 cardicon">
                                                         <div><label><FaLocationDot className='me-2 text-success' />{card.to_location}</label></div>
                                                     </div>
-                                                    {/* <div className="col-lg-12 cardicon">
-                                            <div><label>Distance: {"hii"}</label></div>
-                                        </div> */}
+                                                    <p className='datetext'><strong><RiMapPinTimeFill className='me-2' />Posted on :</strong> {card.updt.slice(5, 25)}</p>
                                                 </div>
                                                 <hr className="hr m-2" />
                                                 <div className='row mt-3'>

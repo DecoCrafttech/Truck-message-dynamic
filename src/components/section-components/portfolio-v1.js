@@ -9,6 +9,7 @@ import { useSelector } from 'react-redux';
 import Cookies from 'js-cookie';
 import Autocomplete from "react-google-autocomplete";
 import { useNavigate } from 'react-router-dom';
+import { RiMapPinTimeFill } from "react-icons/ri";
 
 
 const PortfolioV1 = () => {
@@ -272,6 +273,7 @@ const PortfolioV1 = () => {
                     }
                 })
                 setCards(reOrder)
+                setCurrentPage(1)
 
                 toast.success(res.data.message)
                 document.getElementById("closeFilterBox").click()
@@ -587,7 +589,7 @@ const PortfolioV1 = () => {
                         </div>
 
                         <div className="col-12">
-                            <h6>Descriptions </h6>
+                            <h6>Descriptions(Optional) </h6>
                             <div className="input-item input-item-textarea">
                                 <textarea name="description" placeholder="Enter a text here" onChange={(e) => setEditingData({
                                     ...editingData, description: e.target.value,
@@ -827,6 +829,7 @@ const PortfolioV1 = () => {
                                                     <div className="col-lg-12 cardicon">
                                                         <div><label><FaLocationDot className='me-2 text-success' />{card.to_location}</label></div>
                                                     </div>
+                                                    <p className='datetext'><strong><RiMapPinTimeFill className='me-2' />Posted on :</strong> {card.updt.slice(5, 25)}</p>
                                                 </div>
                                                 <hr className="hr m-2" />
                                                 <div className='row mt-3'>

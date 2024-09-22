@@ -20486,3 +20486,8 @@ input[type=number] {
 .spinner-miin-height{
   height: 30rem;
 }
+
+.datetext{
+  font-size: 12px;
+  margin-bottom: 0px;
+}

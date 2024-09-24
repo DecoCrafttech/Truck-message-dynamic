@@ -16,7 +16,7 @@ const Footer_v1 = () => {
                   <div>
                     <img
                       className="site-logofooter "
-                      src={publicUrl + "assets/img/trucklogoblack.png"}
+                      src="https://ddyz8ollngqwo.cloudfront.net/trucklogo.png"
                       alt="truck message Logo - All in one truck solutions"
                     />
                   </div>

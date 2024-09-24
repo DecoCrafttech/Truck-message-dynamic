@@ -31,16 +31,18 @@ const TruckAvailability = () => {
 
     const [aadharNumber, setAadharNumber] = useState("")
     const [aadharStep, setAadharStep] = useState(1);
-    const [otpNumber, setOtpNumber] = useState("")
+    const [otpNumber, setOtpNumber] = useState("");
 
     const [selectToLocationSingle, setSelectToLocationSingle] = useState("")
     const [selectToLocationMultiple, setSelectToLocationMultiple] = useState([])
 
     const truckBodyType = ["LCV", "Container", "Open body vehicle", "Tanker", "Trailer", "Tipper"];
-    const numOfTyres = [4, 6, 10, 12, 14, 16, 18, 20, 22]
+    const numOfTyres = [4, 6, 10, 12, 14, 16, 18, 20, 22];
+    const [vehicleList, setVehicleList] = useState([]);
+
 
     const [editingData, setEditingData] = useState({
-        vehicle_number: '',
+        vehicle_number: [],
         company_name: '',
         name_of_the_transport: '',
         contact_no: '',
@@ -70,7 +72,38 @@ const TruckAvailability = () => {
     const [contactError, setContactError] = useState(''); // State to manage contact number validation error
 
     const [selectedContactNum, setSelectedContactNum] = useState(null)
-    const [viewContactId, setviewContactId] = useState(null)
+    const [viewContactId, setviewContactId] = useState(null);
+
+    const getVehicleList = async () => {
+        const userId = Cookies.get("usrin") ? window.atob(Cookies.get("usrin")) : '';
+        try {
+            if (userId) {
+                await axios.post('https://truck.truckmessage.com/get_user_vehicle_list', { user_id: userId })
+                    .then(response => {
+                        if (response.data.data.length > 0) {
+                            if (response.data.data[0].vehicle_list.length > 0) {
+                                const vehicleSelectBoxValue = response.data.data[0].vehicle_list.map((val, ind) => {
+                                    return { value: ind + 1, label: val }
+                                })
+                                setVehicleList(vehicleSelectBoxValue);
+                            } else {
+                                setVehicleList([]);
+                            }
+                        } else {
+                            setVehicleList([]);
+                        }
+
+                    })
+                    .catch((err) => {
+                        console.log(err)
+                    })
+            } else {
+                toast.error("User id not found")
+            }
+        } catch (err) {
+            console.log(err)
+        }
+    }
 
     const fetchData = async () => {
         setInitialLoading(true)
@@ -131,8 +164,9 @@ const TruckAvailability = () => {
     }
 
     useEffect(() => {
-        fetchData()
-        getUserStateList()
+        fetchData();
+        getVehicleList();
+        getUserStateList();
     }, []);
 
     const handleCopy = (contactNo, cardId) => {
@@ -181,8 +215,9 @@ const TruckAvailability = () => {
 
     const handleSubmit = async () => {
         const userId = window.atob(Cookies.get("usrin"));
+        const sendVehicleNumber = editingData.vehicle_number.length > 0 ? editingData.vehicle_number[0].label : '' ;
         const data = {
-            vehicle_number: editingData.vehicle_number,
+            vehicle_number: sendVehicleNumber,
             company_name: editingData.company_name,
             name_of_the_transport: editingData.name_of_the_transport,
             contact_no: editingData.contact_no,
@@ -197,8 +232,6 @@ const TruckAvailability = () => {
             user_id: userId
         };
 
-        console.log(data)
-
         try {
             if (data.vehicle_number && data.company_name && data.name_of_the_transport && data.contact_no && data.from && data.to && data.truck_brand_name && data.truck_brand_name && data.tone && data.truck_body_type && data.no_of_tyres) {
                 if (!validateContactNumber(data.contact_no)) {
@@ -210,7 +243,7 @@ const TruckAvailability = () => {
                 if (res.data.error_code === 0) {
                     document.getElementById('closeAddModel').click();
                     setEditingData({
-                        vehicle_number: '',
+                        vehicle_number: [],
                         company_name: '',
                         name_of_the_transport: '',
                         contact_no: '',
@@ -492,7 +525,7 @@ const TruckAvailability = () => {
                     <div className="row gy-4">
                         <div className="col-12 col-md-6">
                             <h6>Vehicle Number</h6>
-                            <div className="input-item input-item-email">
+                            {/* <div className="input-item input-item-email">
                                 <input
                                     type="tel"
                                     name="contact_no"
@@ -507,7 +540,11 @@ const TruckAvailability = () => {
                                     }
                                     required
                                 />
-                            </div>
+                            </div> */}
+                            <Select create={true} options={vehicleList} className='selectBox-innerWidth' onChange={(e) => setEditingData({
+                                ...editingData, 
+                                vehicle_number: e,
+                            })} />
                         </div>
 
                         <div className="col-12 col-md-6">
@@ -957,7 +994,7 @@ const TruckAvailability = () => {
                                                             <i className={`text-warning fa fa-star ${index < card.rating ? '' : 'text-muted'}`}></i>
                                                         </span>
                                                     ))}
-                                                    <span>({card.user_review_count} 4)</span>
+                                                    <span>({card.user_review_count})</span>
                                                     <p className="float-end mb-0 text-b"> <strong>Posts </strong> : {card.user_post}</p>
 
                                                 </p>
@@ -980,7 +1017,7 @@ const TruckAvailability = () => {
                                                     <div className="col-lg-12 cardicon">
                                                         <div><label><FaLocationDot className='me-2 text-success' />{card.to_location}</label></div>
                                                     </div>
-                                                    <p className='datetext'><strong><RiMapPinTimeFill className='me-2' />Posted on :</strong> {card.updt.slice(5, 25)}</p>
+                                                    <p className='datetext'><strong><RiMapPinTimeFill className='me-2' />Posted on :</strong> {card.updt ? card.updt.slice(5, 25) : ''}</p>
                                                 </div>
                                                 <hr className="hr m-2" />
                                                 <div className='row mt-3'>

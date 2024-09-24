@@ -126,7 +126,7 @@ const Service_V1 = () => {
 					</div>
 				</div>
 
-				<div className="col-lg-4 col-sm-6 col-12" >
+				<div className="col-lg-4 col-sm-6 col-12" onClick={() => pageRender("/coming-soon")} >
 					<div className="ltn__feature-item ltn__feature-item-6 text-center bg-white  box-shadow-1">
 						<div className="ltn__feature-icon">
 							<span><GiSpeedometer /></span>
@@ -138,7 +138,7 @@ const Service_V1 = () => {
 					</div>
 				</div>
 
-				<div className="col-lg-4 col-sm-6 col-12" >
+				<div className="col-lg-4 col-sm-6 col-12"  onClick={() => pageRender("/coming-soon")}>
 					<div className="ltn__feature-item ltn__feature-item-6 text-center bg-white  box-shadow-1">
 						<div className="ltn__feature-icon">
 							<span><BsShieldShaded /></span>

@@ -812,7 +812,7 @@ const PortfolioV1 = () => {
                                                     <div className="col-lg-12 cardicon">
                                                         <div><label><FaLocationDot className='me-2 text-success' />{card.to_location}</label></div>
                                                     </div>
-                                                    <p className='datetext'><strong><RiMapPinTimeFill className='me-2' />Posted on :</strong> {card.updt.slice(5, 25)}</p>
+                                                    <p className='datetext'><strong><RiMapPinTimeFill className='me-2' />Posted on :</strong> {card.updt ? card.updt.slice(5, 25): ''}</p>
                                                 </div>
                                                 <hr className="hr m-2" />
                                                 <div className='row mt-3'>

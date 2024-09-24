@@ -8,6 +8,7 @@ import Cookie from 'js-cookie';
 import axios from 'axios';
 import { MdDelete } from "react-icons/md";
 import Autocomplete from "react-google-autocomplete";
+import { IoIosMail } from "react-icons/io";
 import { AiOutlineEye } from "react-icons/ai";
 import { AiOutlineEyeInvisible } from "react-icons/ai";
 import validator from 'validator'
@@ -479,42 +480,19 @@ const Navbar = () => {
                         <div className="container">
                             <div className="row">
                                 <div className="col">
-                                    <div className="ltn__top-bar-menu text-start  mailtext">
+                                    <div className="ltn__top-bar-menu text-start  ">
                                         <ul>
-                                            <li className='fs-5 my-2 '>
+                                            <li className='fs-4 my-2 '>
                                                 <a className=' mailtext' href="mailto:info@webmail.com?Subject=Flower%20greetings%20to%20you">
-                                                    <i className="icon-mail " /> info@truckmessage.com
+                                                <IoIosMail className='me-2' />
+                                                info@truckmessage.com
                                                 </a>
                                             </li>
                                         </ul>
                                     </div>
                                 </div>
 
-                                <div className="col">
-                                    <div className="top-bar-right justify-content-end">
-                                        <div className="ltn__top-bar-menu text-end">
-                                            <ul>
-                                                <li>
-                                                    <div className="ltn__drop-menu ltn__currency-menu ltn__language-menu">
-                                                        <ul>
-                                                            <li>
-                                                                <a href="#" className="dropdown-toggle">
-                                                                    <span className="active-currency">English</span>
-                                                                </a>
-                                                                <ul>
-                                                                    <li><Link to="#">Tamil</Link></li>
-                                                                    <li><Link to="#">English</Link></li>
-                                                                    <li><Link to="#">Hindi</Link></li>
-
-                                                                </ul>
-                                                            </li>
-                                                        </ul>
-                                                    </div>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                </div>
+                                
                             </div>
                         </div>
                     </div>

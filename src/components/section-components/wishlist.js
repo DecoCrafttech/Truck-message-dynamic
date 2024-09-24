@@ -924,7 +924,7 @@ const WishList = () => {
                 </div>
                 <div className="row px-2">
                   <div className="col-6">
-                    <h5 className="card-title mt-3">Driver name</h5>
+                    <h5 className="card-title mt-3">Owner name</h5>
                     <p className="card-text paragraph">{item.driver_name}</p>
                   </div>
                   <div className="col-6">
@@ -1749,7 +1749,7 @@ const WishList = () => {
                   </div>
 
                   <div className="col-12 col-md-6">
-                    <h6>Driver Name</h6>
+                    <h6></h6>
                     <div className="input-item input-item-name">
                       <input
                         type="text"
@@ -1924,6 +1924,7 @@ const WishList = () => {
         <div className="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
           <div className="modal-content">
             <div className="modal-header">
+              Edit
               <button
                 type="button"
                 className="btn-close"

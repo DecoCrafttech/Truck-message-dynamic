@@ -69,7 +69,39 @@ const BlogGrid = () => {
 
     const [contactError, setContactError] = useState(''); // State to manage contact number validation error
     const [userStateList, setUserStateList] = useState([])
-    const [selectToLocationMultiple, setSelectToLocationMultiple] = useState([])
+    const [selectToLocationMultiple, setSelectToLocationMultiple] = useState([]);
+    const [vehicleList, setVehicleList] = useState([]);
+
+    const getVehicleList = async () => {
+        const userId = Cookies.get("usrin") ? window.atob(Cookies.get("usrin")) : '';
+        try {
+            if (userId) {
+                await axios.post('https://truck.truckmessage.com/get_user_vehicle_list', { user_id: userId })
+                    .then(response => {
+                        if (response.data.data.length > 0) {
+                            if (response.data.data[0].vehicle_list.length > 0) {
+                                const vehicleSelectBoxValue = response.data.data[0].vehicle_list.map((val, ind) => {
+                                    return { value: ind + 1, label: val }
+                                })
+                                setVehicleList(vehicleSelectBoxValue);
+                            } else {
+                                setVehicleList([]);
+                            }
+                        } else {
+                            setVehicleList([]);
+                        }
+
+                    })
+                    .catch((err) => {
+                        console.log(err)
+                    })
+            } else {
+                toast.error("User id not found")
+            }
+        } catch (err) {
+            console.log(err)
+        }
+    }
 
 
     const fetchData = async () => {
@@ -125,6 +157,7 @@ const BlogGrid = () => {
 
     useEffect(() => {
         fetchData();
+        getVehicleList();
         getUserStateList();
     }, []);
 
@@ -173,13 +206,15 @@ const BlogGrid = () => {
 
     const handleSubmit = async () => {
         const userId = window.atob(Cookies.get("usrin"));
+        const sendVehicleNumber = editingData.vehicle_number.length > 0 ? editingData.vehicle_number[0].label : '' ;
 
         const data = {
             ...editingData,
             from: showingFromLocation,
             to: showingToLocation,
             user_id: userId,
-            truck_name: ''
+            truck_name: '',
+            vehicle_number: sendVehicleNumber
         };
 
         try {
@@ -463,7 +498,7 @@ const BlogGrid = () => {
                     <div className="row gy-4">
                         <div className="col-12 col-md-6">
                             <h6>Vehicle Number</h6>
-                            <div className="input-item input-item-email">
+                            {/* <div className="input-item input-item-email">
                                 <input
                                     type="tel"
                                     name="contact_no"
@@ -478,11 +513,15 @@ const BlogGrid = () => {
                                     }
                                     required
                                 />
-                            </div>
+                            </div> */}
+                             <Select create={true} options={vehicleList} className='selectBox-innerWidth' onChange={(e) => setEditingData({
+                                ...editingData, 
+                                vehicle_number: e,
+                            })} />
                         </div>
 
                         <div className="col-12 col-md-6">
-                            <h6>Driver Name</h6>
+                            <h6>Owner name</h6>
                             <div className="input-item input-item-name">
                                 <input
                                     type="text"
@@ -847,7 +886,7 @@ const BlogGrid = () => {
                                                 <div className="col-lg-12 cardicon">
                                                     <div><label><FaLocationDot className='me-2 text-success' />{card.to_location}</label></div>
                                                 </div>
-                                                <p className='datetext'><strong><RiMapPinTimeFill className='me-2' />Posted on :</strong> {card.updt.slice(5, 25)}</p>
+                                                <p className='datetext'><strong><RiMapPinTimeFill className='me-2' />Posted on :</strong> {card.updt ? card.updt.slice(5, 25): ''}</p>
                                             </div>
                                             <hr className="hr m-2" />
                                             <div className='row mt-3'>

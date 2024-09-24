@@ -19,6 +19,7 @@ const Product_Details = () => {
 
     const [data, setData] = useState({
         brand: "",
+        price:"",
         buy_sell_id: "",
         contact_no: "",
         description: "",
@@ -70,39 +71,39 @@ const Product_Details = () => {
         swipeToSlide: true,
     };
 
-    useEffect(() => {
-        const fetchDetails = async () => {
-            const getViewDetailsId = Cookies.get("buyAndSellViewDetailsId");
-            setImages([]);
+    const fetchDetails = async () => {
+        const getViewDetailsId = Cookies.get("buyAndSellViewDetailsId");
+        setImages([]);
 
-            if (getViewDetailsId) {
-                try {
-                    const data = {
-                        buy_sell_id: window.atob(getViewDetailsId)
-                    };
-                    const res = await axios.post('https://truck.truckmessage.com/buy_sell_id_details', data, {
-                        headers: {
-                            'Content-Type': 'application/json'
-                        }
-                    });
-
-                    if (res.data.error_code === 0) {
-                        if (res.data.data.length > 0) {
-                            setData(...res.data.data);
-                            setImages(res.data.data[0].images)
-                            console.log(res.data.data[0].images)
-                        }
-                    } else {
-                        toast.error(res.data.message);
+        if (getViewDetailsId) {
+            try {
+                const data = {
+                    buy_sell_id: window.atob(getViewDetailsId)
+                };
+                const res = await axios.post('https://truck.truckmessage.com/buy_sell_id_details', data, {
+                    headers: {
+                        'Content-Type': 'application/json'
                     }
-                } catch (err) {
-                    console.log(err);
-                }
-            } else {
-                toast.error("Something went wrong");
-            }
-        };
+                });
 
+                if (res.data.error_code === 0) {
+                    if (res.data.data.length > 0) {
+                        setData(...res.data.data);
+                        setImages(res.data.data[0].images) 
+                    }
+                } else {
+                    toast.error(res.data.message);
+                }
+            } catch (err) {
+                console.log(err);
+            }
+        } else {
+            toast.error("Something went wrong");
+        }
+    };
+
+
+    useEffect(() => {
         fetchDetails()
     }, []);
 
@@ -160,14 +161,6 @@ const Product_Details = () => {
                                 </div>
                             </div>
                         </div>
-                        {/* <>
-						{isOpen &&
-							<Lightbox
-								mainSrc={currentImage}
-								onCloseRequest={() => setIsOpen(false)}
-							/>
-						}
-						</> */}
 
                         <div className='col-12'>
                             <div className='row'>
@@ -186,17 +179,15 @@ const Product_Details = () => {
                                     <div className="ltn__blog-meta">
                                         <ul className="list-inline">
                                             <li className="list-inline-item ltn__blog-date mt-3">
-                                                <i className="far fa-calendar-alt" /> {data.updt}
-                                            </li>
-                                            {/* <li className="list-inline-item">
-												<Link to="#"><i className="far fa-comments" /> 35 Comments</Link>
-											</li> */}
+                                                <i className="far fa-calendar-alt" /> {data.updt ? data.updt.slice(5, 25): ''}
+                                            </li> 
                                         </ul>
                                         <label className='mt-3 d-block'>
-                                            <span className="ltn__secondary-color"><i className="flaticon-pin" /></span> Belmont Gardens, Chicago
+                                            {/* <span className="ltn__secondary-color"><i className="flaticon-pin" /></span> {data} */}
                                         </label>
                                     </div>
                                 </div>
+
                                 <div className='col-4 col-md-4 w-100 '>
                                     <div className='d-flex justify-content-center align-items-center gap-2 col-12 p-0'>
                                         <div className='col-6 p-0'>
@@ -234,26 +225,59 @@ const Product_Details = () => {
                     </div>
                 </div>
 
-                <div className="property-detail-info-list section-bg-1 clearfix mb-60">
-                    <ul>
-                        <li><label>brand:</label> <span>{data.brand}</span></li>
-                        <li><label>owner_name:</label> <span>{data.owner_name}</span></li>
-                        <li><label>model: </label> <span>{data.model}</span></li>
-                        <li><label>vehicle_number:</label> <span>{data.vehicle_number}</span></li>
-                        <li><label>kms_driven:</label> <span>{data.kms_driven}</span></li>
-                        <li><label>price:</label> <span>{data.price}</span></li>
-                    </ul>
-
-                </div>
-                <h4 className="title-2">Description</h4>(description)
+                <div className="clearfix mb-30">
+					<table className="table table-bordered">
+						<tbody>
+							<tr>
+								<th>Brand</th>
+								<td>{data.brand}</td>
+							</tr>
+							<tr>
+								<th>Owner Name</th>
+								<td>{data.owner_name}</td>
+							</tr>
+							<tr>
+								<th>Model</th>
+								<td>{data.model}</td>
+							</tr>
+							<tr>
+								<th>Vehicle Number</th>
+								<td>{data.vehicle_number}</td>
+							</tr>
+							<tr>
+								<th>KMs Driven</th>
+								<td>{data.kms_driven}</td>
+							</tr>
+							<tr>
+								<th>Price</th>
+								<td>₹ {data.price}</td>
+							</tr>
+							<tr>
+								<th>No. of Tyres</th>
+								<td>{data.no_of_tyres}</td>
+							</tr>
+							<tr>
+								<th>Tonnage</th>
+								<td>{data.tonnage}</td>
+							</tr>
+							<tr>
+								<th>Truck Body Type</th>
+								<td>{data.truck_body_type}</td>
+							</tr>
+							<tr>
+								<th>Last Updated</th>
+								<td>{data.updt ? data.updt.slice(5, 25): ''}</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+                <h4 className="title-2">Description</h4>
                 <p>{data.description}</p>
 
                 {/* <h4 className="title-2">Location</h4>
 				<div className="property-details-google-map mb-60">
 					<iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d9334.271551495209!2d-73.97198251485975!3d40.668170674982946!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c25b0456b5a2e7%3A0x68bdf865dda0b669!2sBrooklyn%20Botanic%20Garden%20Shop!5e0!3m2!1sen!2sbd!4v1590597267201!5m2!1sen!2sbd" width="100%" height="100%" frameBorder={0} allowFullScreen aria-hidden="false" tabIndex={0} />
-				</div> */}
-                {/* comment-reply */}
-
+				</div>  */}
             </div>
         </div>
     </div>

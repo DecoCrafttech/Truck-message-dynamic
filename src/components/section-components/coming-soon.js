@@ -13,7 +13,7 @@ const ComingSoon = () => {
 							<h1 className="section-title text-dark">Coming Soon</h1>
 						</div>
 						<div className="btn-wrapper mt-50">
-							<Link to="/contact" className="btn btn-danger theme-btn-2 text-uppercase">Contact Us</Link>
+							<Link to="/" className="btn btn-danger theme-btn-2 text-uppercase">Back to Home</Link>
 						</div>
 					</div>
 				</div>

@@ -443,7 +443,7 @@ const MyAccount = () => {
                   </div>
 
                   <div className=' col-12 col-md-12 col-xl-4 d-inline-flex'>
-                    <div className="ltn-author-introducing clearfix mb-3 px-3">
+                    <div className="ltn-author-introducing clearfix mb-3 px-3 w-100">
                       <div className='row align-items-center'>
                         <div className="col-10">
                           <div className="footer-address-icon"></div>

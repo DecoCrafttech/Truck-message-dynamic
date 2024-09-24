@@ -1518,7 +1518,7 @@ const BlogList = () => {
                                 {card.location}
                               </label>
                             </div>
-                            <p className='datetext mb-3'><strong><RiMapPinTimeFill className='me-2' />Posted on :</strong> {card.updt.slice(5, 25)}</p>
+                            <p className='datetext mb-3'><strong><RiMapPinTimeFill className='me-2' />Posted on :</strong> {card.updt ? card.updt.slice(5, 25): ''}</p>
                             <div>
                               <div className="row">
                                 <div className="col-6 col-md-6 cardicontext">

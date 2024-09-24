@@ -32,7 +32,11 @@ export const ExpenseCalculator = () => {
     }, [LoginDetails.isLoggedIn]);
 
     useEffect(() => {
-        fetchLoadTrips();
+        const encodedUserId = Cookies.get('usrin');
+        if (encodedUserId) {
+            fetchLoadTrips();
+        }
+
     }, []);
 
     const handleFromLocation = (selectedLocation) => {
@@ -71,10 +75,6 @@ export const ExpenseCalculator = () => {
 
     const fetchLoadTrips = async () => {
         const encodedUserId = Cookies.get('usrin');
-        if (!encodedUserId) {
-            toast.error('User ID not found in cookies');
-            return;
-        }
         const userId = window.atob(encodedUserId);
 
         await axios.post('https://truck.truckmessage.com/user_load_trip_details', { user_id: userId })

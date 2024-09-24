@@ -1,6 +1,8 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import Copyright from "./copyright";
+import { IoIosMail } from "react-icons/io";
+import { FaMapLocationDot, FaPhoneVolume } from "react-icons/fa6";
 
 const Footer_v1 = () => {
   let publicUrl = process.env.PUBLIC_URL + "/";
@@ -26,7 +28,7 @@ const Footer_v1 = () => {
                   <ul>
                     <li>
                       <div className=" para footer-address-icon">
-                        <i className=" para icon-placeholder" />
+                      <FaMapLocationDot />
                       </div>
                       <div className="footer-address-info footercls">
                         10/61,North Street, Near Sri Ambiga Press,
@@ -35,7 +37,7 @@ const Footer_v1 = () => {
                     </li>
                     <li>
                       <div className="footer-address-icon para">
-                        <i className="icon-call footercls" />
+                      <FaPhoneVolume />
                       </div>
                       <div className="footer-address-info">
                         <a style={{ textDecoration: "none", color: "white" }} href="tel:8300745340">+91 83007 45340</a>
@@ -44,8 +46,9 @@ const Footer_v1 = () => {
                       </div>
                     </li>
                     <li>
-                      <div className="footer-address-icon">
-                        <i className="icon-mail footercls " />
+                      <div className="footer-address-icon"><IoIosMail />
+
+                        
                       </div>
                       <div className="footer-address-info footercls ">
                         <a style={{ textDecoration: "none", color: "white" }} href="mailto:info@truckmessage.com">

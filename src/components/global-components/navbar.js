@@ -482,7 +482,7 @@ const Navbar = () => {
                                 <div className="col">
                                     <div className="ltn__top-bar-menu text-start  ">
                                         <ul>
-                                            <li className='fs-4 my-2 '>
+                                            <li className='fs-4  '>
                                                 <a className=' mailtext' href="mailto:info@webmail.com?Subject=Flower%20greetings%20to%20you">
                                                 <IoIosMail className='me-2' />
                                                 info@truckmessage.com
@@ -501,7 +501,7 @@ const Navbar = () => {
                     <div className="ltn__header-middle-area ltn__header-sticky ltn__sticky-bg-white py-3">
                         <div className="container">
                             <div className="row">
-                                <div className="col-5 col-md-4 col-lg-2">
+                                <div className="col-5 col-md-4 col-lg-4 col-xl-3">
                                     <div className="site-logo-wrap mb-0 w-100">
                                         <div className="site-logo go-top w-100">
                                             <Link to="/"><img src={publicUrl + "assets/img/truckmessage.png"} alt="truck message Logo - All in one truck solutions" /></Link>

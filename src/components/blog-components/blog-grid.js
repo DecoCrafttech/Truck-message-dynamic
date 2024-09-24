@@ -192,6 +192,7 @@ const BlogGrid = () => {
                 card.truck_body_type.toLowerCase().includes(search) ||
                 card.truck_name.toLowerCase().includes(search) ||
                 card.driver_name.toLowerCase().includes(search) ||
+                card.profile_name.toLowerCase().includes(search) ||
                 card.company_name.toLowerCase().includes(search)
             );
         });

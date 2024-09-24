@@ -197,6 +197,7 @@ const TruckAvailability = () => {
                 card.company_name.toLowerCase().includes(search) ||
                 card.from_location.toLowerCase().includes(search) ||
                 card.to_location.toLowerCase().includes(search) ||
+                card.profile_name.toLowerCase().includes(search) ||
                 card.tone.toString().includes(search) ||
                 // card.material.toLowerCase().includes(search) ||
                 card.no_of_tyres.toString().includes(search) ||

@@ -218,7 +218,13 @@ const BlogList = () => {
         card.location.toLowerCase().includes(search) ||
         card.model.toString().includes(search) ||
         card.owner_name.toLowerCase().includes(search) ||
+        card.no_of_tyres.toLowerCase().includes(search) ||
         card.vehicle_number.toLowerCase().includes(search) ||
+        card.owner_name.toLowerCase().includes(search) ||
+        card.profile_name.toLowerCase().includes(search) ||
+        card.brand.toLowerCase().includes(search) ||
+        card.tonnage.toLowerCase().includes(search) ||
+        card.truck_body_type.toLowerCase().includes(search) ||
         card.kms_driven.toString().includes(search)
       );
     });

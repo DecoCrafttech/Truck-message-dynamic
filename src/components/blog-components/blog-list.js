@@ -244,7 +244,7 @@ const BlogList = () => {
     truck_body_type: "",
     model: "",
     brand: '',
-    tonnage: []
+    tonnage: ""
   });
 
   useEffect(() => {
@@ -396,10 +396,10 @@ const BlogList = () => {
     formData.append("vehicle_number", edit.vehicle_number);
     formData.append("truck_body_type", editingData.truck_body_type)
     formData.append("no_of_tyres", editingData.no_of_tyres)
-    formData.append("tonnage", editingData.tonnage.length > 0 ? [`${editingData.tonnage} Ton `] : [])
+    formData.append("tonnage", editingData.tonnage!=='' ? `${editingData.tonnage} Ton ` : '')
 
 
-    if (editingData.tonnage.length > 0 || editingData.no_of_tyres || editingData.truck_body_type || edit.vehicle_number || edit.owner_name || edit.brand || edit.contact_no || edit.price || edit.kms_driven || showingBuyAndSellLocation || edit.model) {
+    if (editingData.tonnage.length > 0 && editingData.no_of_tyres && editingData.truck_body_type && edit.vehicle_number && edit.owner_name && edit.brand && edit.contact_no && edit.price && edit.kms_driven && showingBuyAndSellLocation && edit.model) {
       if (multipleImages.length > 0) {
         setCreateVehicleLoading(true);
 
@@ -785,7 +785,7 @@ const BlogList = () => {
                 </div>
               </div>
 
-              <div className="col-12 col-md-6 mt-4">
+              <div className="col-12 col-md-6 mt-3">
                 <h6>Tonnage</h6>
                 <div className="tel-item">
                   <input
@@ -794,11 +794,11 @@ const BlogList = () => {
                     className="w-100 py-3 mt-2 m-0"
                     placeholder="Enter your ton..."
                     min={1}
-                    value={editingData.tonnage.length > 0 ? `${editingData.tonnage[0]}` : ''}
+                    value={editingData.tonnage}
                     onChange={(e) =>
                       setEditingData({
                         ...editingData,
-                        tonnage: [e.target.value]
+                        tonnage: e.target.value
                       })
                     }
                     required
@@ -842,10 +842,6 @@ const BlogList = () => {
                       }
                     }}
                     required
-                    value={showingBuyAndSellLocation}
-                    onChange={(e) =>
-                      setShowingBuyAndSellLocation(e.target.value)
-                    }
                   />
                 </div>
               </div>

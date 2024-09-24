@@ -59,7 +59,7 @@ const PortfolioV1 = () => {
     const [aadharNumber, setAadharNumber] = useState("")
     const [aadharStep, setAadharStep] = useState(1);
     const [otpNumber, setOtpNumber] = useState("");
-    const [selectedContactNum, setSelectedContactNum] = useState(null)
+    const [selectedContactNum, setSelectedContactNum] = useState(null);
 
     const fetchData = async () => {
         setInitialLoading(true)
@@ -104,13 +104,6 @@ const PortfolioV1 = () => {
     };
 
     const handleCopy = (contactNo, cardId) => {
-        // navigator.clipboard.writeText(contactNo)
-        //     .then(() => {
-        //         toast.success('Contact number copied!'); // Optional, show a success message
-        //     })
-        //     .catch(() => {
-        //         toast.error('Failed to copy contact number.');
-        //     });
         setSelectedContactNum(null)
 
         setviewContactId(cardId)
@@ -210,8 +203,6 @@ const PortfolioV1 = () => {
 
     // Handle page change
     const paginate = (pageNumber) => setCurrentPage(pageNumber);
-
-
 
     const [editCompanyFromLocation, setEditCompanyFromLocation] = useState({
         city: "",
@@ -487,8 +478,6 @@ const PortfolioV1 = () => {
                                         }
                                     }}
                                     required
-                                    value={showingFromLocation}
-                                    onChange={(e) => setShowingFromLocation(e.target.value)}
                                 />
                             </div>
                         </div>
@@ -504,8 +493,6 @@ const PortfolioV1 = () => {
                                         }
                                     }}
                                     required
-                                    value={showingToLocation}
-                                    onChange={(e) => setShowingToLocation(e.target.value)}
                                 />
                             </div>
                         </div>
@@ -702,8 +689,6 @@ const PortfolioV1 = () => {
                                                         handleFromLocation(place.address_components);
                                                     }
                                                 }}
-                                                value={showingFromLocation}
-                                                onChange={(e) => setShowingFromLocation(e.target.value)}
                                             />
                                         </div>
                                     </div>
@@ -718,8 +703,6 @@ const PortfolioV1 = () => {
                                                         handleToLocation(place.address_components);
                                                     }
                                                 }}
-                                                value={showingToLocation}
-                                                onChange={(e) => setShowingToLocation(e.target.value)}
                                             />
                                         </div>
                                     </div>
@@ -885,7 +868,6 @@ const PortfolioV1 = () => {
                                                                                 className="btn btn-success w-100"
                                                                                 type="button"
                                                                                 onClick={() => handleCopy(card.contact_no, card.id)}>
-                                                                                {/* <FaRegCopy className='me-2' /> */}
                                                                                 Contact
                                                                             </button>
                                                                 }

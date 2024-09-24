@@ -20491,3 +20491,11 @@ input[type=number] {
   font-size: 12px;
   margin-bottom: 0px;
 }
+
+body{
+  scroll-behavior: smooth !important;
+}
+
+.modal-content{
+  padding: 0 !important;
+}

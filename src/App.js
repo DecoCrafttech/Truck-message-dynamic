@@ -18,6 +18,8 @@ import { ExpenseCalculator } from "./components/ExpenseCalculator";
 import ExpenseDetails from "./components/ExpenseDetails";
 import TollCalculator from "./components/TollCalculator";
 import ChatView from "./components/Chat/Chat";
+import TeamDetails from "./components/team-details";
+import ContactV1 from "./components/contact";
 
 function App() {
 
@@ -30,30 +32,26 @@ function App() {
         <Routes>
           <Route path="/" element={<Service />} />
           <Route path="/my_profile" element={<Profile />} /> 
-          <Route path="/load-availability" element={<Loadavailablity />} />
-          {/* <Route path="/truck_availability" element={<truck_availability />} /> */}
+          <Route path="/load-availability" element={<Loadavailablity />} /> 
           <Route path="/coming-soon" element={<ComingSoon />} />
-
           <Route path="/product-details" element={<ProdductDetails />} />
-          {/* blog */}
           <Route path="/blog-grid" element={<BlogGrid />} />
           <Route path="/blog-left-sidebar" element={<BlogLeftSidebar />} />
-
           <Route path="/blog-details" element={<BlogDetails />} />
           <Route path="/my-account" element={<MyAccount />} />
           <Route path="/toll-calculator" element={<TollCalculator />} />
-
+          <Route path="/team-details" element={<TeamDetails />} />
+          <Route path="/expense-calculator" element={<ExpenseCalculator />} />
+          <Route path="/expense-details/:id" element={<ExpenseDetails />} />
+          <Route path="/fuelprice" element={<FuelPrice />} />
+          <Route path="/chat" element={<ChatView />} />
+          <Route path="/contact" element={<ContactV1 />} />
           <Route path="/wishlist" element={<Wishlist />}>
             <Route path="load" />
             <Route path="truck" />
             <Route path="driver" />
             <Route path="buy_sell" />
           </Route>
-
-          <Route path="/expense-calculator" element={<ExpenseCalculator />} />
-          <Route path="/expense-details/:id" element={<ExpenseDetails />} />
-          <Route path="/fuelprice" element={<FuelPrice />} />
-          <Route path="/chat" element={<ChatView />} />
           <Route path="*" element={<Error />} />
         </Routes>
         <Footer />

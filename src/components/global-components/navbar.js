@@ -523,9 +523,9 @@ const Navbar = () => {
                     <div className="ltn__header-middle-area ltn__header-sticky ltn__sticky-bg-white py-3">
                         <div className="container">
                             <div className="row">
-                                <div className="col">
-                                    <div className="site-logo-wrap mb-0">
-                                        <div className="site-logo go-top">
+                                <div className="col-5 col-md-4 col-lg-2">
+                                    <div className="site-logo-wrap mb-0 w-100">
+                                        <div className="site-logo go-top w-100">
                                             <Link to="/"><img src={publicUrl + "assets/img/truckmessage.png"} alt="truck message Logo - All in one truck solutions" /></Link>
                                         </div>
                                     </div>
@@ -552,37 +552,23 @@ const Navbar = () => {
                                                 <div className="ltn__drop-menu user-menu">
                                                     <ul>
                                                         <li>
-                                                            <Link data-bs-toggle="modal" data-bs-target="#loginModal" title="Login">
-                                                                <i className="far fa-sign-in-alt" />
+                                                            <button type='button' className='btn btn-sm btn-danger' data-bs-toggle="modal" data-bs-target="#loginModal" title="Login">
                                                                 <span className="tooltip">Login</span>
-                                                            </Link>
+                                                                Login
+                                                            </button>
                                                         </li>
-                                                        <li>
-                                                            <Link data-bs-toggle="modal" data-bs-target="#registerModal" title="Sign Up" onClick={() => {
+                                                        <li className='ms-3'>
+                                                            <button type='button' className='btn btn-sm btn-danger' data-bs-toggle="modal" data-bs-target="#registerModal" title="Sign Up" onClick={() => {
                                                                 setStep(1)
                                                                 handleResetAllFields()
                                                             }}>
-                                                                <i className="fas fa-user-plus" />
-                                                                <span className="tooltip">Sign Up</span>
-                                                            </Link>
+                                                                <span className="tooltip">Register</span>
+                                                                Register
+                                                            </button>
                                                         </li>
                                                     </ul>
                                                 </div>
                                         }
-
-                                        <div className="dropdown mobile-menu-toggle dropdown d-xl-none">
-                                            <button type="button" className="btn ltn__utilize-toggle p-0 shadow" data-bs-toggle="dropdown" aria-expanded="false">
-                                                <i className="fa-solid fa-bars p-0" />
-                                            </button>
-                                            <ul className="dropdown-menu end-0 dropdown-menu-lg-end">
-                                                <li className='mt-0'><Link to="/" className="dropdown-item">Home</Link></li>
-                                                <li className='mt-0'><Link to="/service" className="dropdown-item">Services</Link></li>
-                                                <li className='mt-0'><Link to="/" className="dropdown-item">About</Link></li>
-                                                <li className='mt-0'><Link to="/" className="dropdown-item">Blog</Link></li>
-                                                {/* <li className='mt-0'><Link to="/blog" className="dropdown-item">Blog</Link></li> */}
-                                                <li className='mt-0'><Link to="/contact" className="dropdown-item">Contact</Link></li>
-                                            </ul>
-                                        </div>
                                     </div>
                                 </div>
                             </div>

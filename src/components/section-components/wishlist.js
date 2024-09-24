@@ -76,7 +76,7 @@ const WishList = () => {
   const [showingToLocation, setShowingToLocation] = useState("");
   const [showingBuyAndSellLocation, setShowingBuyAndSellLocation] = useState("");
   const [deletingData, setDeletingData] = useState({});
-  const [feedbackRadio, setFeedbackRadio] = useState("NO");
+  const [feedbackRadio, setFeedbackRadio] = useState("YES");
   const [feedback, setfeedback] = useState({
     feedbackCnt: "",
     mobNum: "",
@@ -2313,7 +2313,7 @@ const WishList = () => {
                   </div>
                 ) : (
                   <>
-                    <div className="mb-3">
+                    <div className="mb-4">
                       <label
                         htmlFor="feedbackModelMobilenumber"
                         className="form-label"
@@ -2322,7 +2322,7 @@ const WishList = () => {
                       </label>
                       <input
                         type="number"
-                        className="form-control"
+                        className="form-control m-0"
                         id="feedbackModelMobilenumber"
                         placeholder="Enter your mobile number"
                         value={feedback.mobNum}

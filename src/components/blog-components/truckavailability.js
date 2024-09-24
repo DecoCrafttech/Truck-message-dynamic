@@ -97,9 +97,7 @@ const TruckAvailability = () => {
                     .catch((err) => {
                         console.log(err)
                     })
-            } else {
-                toast.error("User id not found")
-            }
+            }  
         } catch (err) {
             console.log(err)
         }

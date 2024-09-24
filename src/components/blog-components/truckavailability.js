@@ -33,6 +33,9 @@ const TruckAvailability = () => {
     const [aadharStep, setAadharStep] = useState(1);
     const [otpNumber, setOtpNumber] = useState("");
 
+    const [submitLoadLoading, setSubmitLoadLoading] = useState(false);
+    const [filterButtonLoading, setfilterButtonLoading] = useState(false);
+
     const [selectToLocationSingle, setSelectToLocationSingle] = useState("")
     const [selectToLocationMultiple, setSelectToLocationMultiple] = useState([])
 
@@ -97,7 +100,7 @@ const TruckAvailability = () => {
                     .catch((err) => {
                         console.log(err)
                     })
-            }  
+            }
         } catch (err) {
             console.log(err)
         }
@@ -168,13 +171,6 @@ const TruckAvailability = () => {
     }, []);
 
     const handleCopy = (contactNo, cardId) => {
-        // navigator.clipboard.writeText(contactNo)
-        //     .then(() => {
-        //         toast.success('Contact number copied!'); // Optional, show a success message
-        //     })
-        //     .catch(() => {
-        //         toast.error('Failed to copy contact number.');
-        //     });
         setSelectedContactNum(null)
 
         setviewContactId(cardId)
@@ -199,7 +195,6 @@ const TruckAvailability = () => {
                 card.to_location.toLowerCase().includes(search) ||
                 card.profile_name.toLowerCase().includes(search) ||
                 card.tone.toString().includes(search) ||
-                // card.material.toLowerCase().includes(search) ||
                 card.no_of_tyres.toString().includes(search) ||
                 card.truck_body_type.toLowerCase().includes(search)
             );
@@ -214,7 +209,7 @@ const TruckAvailability = () => {
 
     const handleSubmit = async () => {
         const userId = window.atob(Cookies.get("usrin"));
-        const sendVehicleNumber = editingData.vehicle_number.length > 0 ? editingData.vehicle_number[0].label : '' ;
+        const sendVehicleNumber = editingData.vehicle_number.length > 0 ? editingData.vehicle_number[0].label : '';
         const data = {
             vehicle_number: sendVehicleNumber,
             company_name: editingData.company_name,
@@ -237,6 +232,7 @@ const TruckAvailability = () => {
                     setContactError('Please enter a valid 10-digit contact number.');
                     return;
                 }
+                setSubmitLoadLoading(true)
 
                 const res = await axios.post('https://truck.truckmessage.com/truck_entry', data, {})
                 if (res.data.error_code === 0) {
@@ -256,18 +252,20 @@ const TruckAvailability = () => {
                     setShowingFromLocation('')
                     setShowingToLocation('')
                     setSelectToLocationSingle("")
-
-                    toast.success(res.data.message);
                     fetchData()
+                    setSubmitLoadLoading(false)
                 } else {
                     toast.error(res.data.message);
+                    setSubmitLoadLoading(false)
                 }
             } else {
                 toast.error('Some fields are missing');
+                setSubmitLoadLoading(false)
             }
         }
         catch (err) {
             console.log(err)
+            setSubmitLoadLoading(false)
         }
     };
 
@@ -303,10 +301,6 @@ const TruckAvailability = () => {
             const stateComponent = selectedLocation.find(component => component.types.includes('administrative_area_level_1'));
 
             if (cityComponent && stateComponent) {
-                setEditCompanyFromLocation({
-                    city: cityComponent.long_name,
-                    state: stateComponent.long_name,
-                });
                 setShowingFromLocation(`${cityComponent.long_name}, ${stateComponent.long_name}`);
             }
         }
@@ -318,10 +312,6 @@ const TruckAvailability = () => {
             const stateComponent = selectedLocation.find(component => component.types.includes('administrative_area_level_1'));
 
             if (cityComponent && stateComponent) {
-                setEditCompanyToLocation({
-                    city: cityComponent.long_name,
-                    state: stateComponent.long_name,
-                });
                 setShowingToLocation(`${cityComponent.long_name}, ${stateComponent.long_name}`);
             }
         }
@@ -334,45 +324,33 @@ const TruckAvailability = () => {
         filterObj.truck_name = filterModelData.truck_brand_name
         filterObj.from_location = showingFromLocation
         filterObj.to_location = spreadMultipleLocation
+        if (filterModelData.from_location || spreadMultipleLocation.length > 0 || filterModelData.truck_body_type || filterModelData.no_of_tyres || filterModelData.truck_brand_name || filterModelData.tone) {
+            setfilterButtonLoading(true)
+            try {
+                const res = await axios.post("https://truck.truckmessage.com/user_truck_details_filter", filterObj)
 
-        try {
-            const res = await axios.post("https://truck.truckmessage.com/user_truck_details_filter", filterObj)
+                if (res.data.error_code === 0) {
+                    const reOrder = res.data.data.sort(function (a, b) {
+                        if (new Date(a.updt) > new Date(b.updt)) {
+                            return -1
+                        }
+                    })
 
-            if (res.data.error_code === 0) {
-                const reOrder = res.data.data.sort(function (a, b) {
-                    if (new Date(a.updt) > new Date(b.updt)) {
-                        return -1
-                    }
-                })
-
-                setCards(reOrder)
-                setCurrentPage(1)
-
-                toast.success(res.data.message)
-                document.getElementById("closeFilterBox").click()
-
-                // SetfilterModelData({
-                //     user_id: "",
-                //     vehicle_number: "",
-                //     company_name: "",
-                //     contact_no: "",
-                //     from_location: "",
-                //     to_location: "",
-                //     truck_brand_name: "",
-                //     truck_body_type: "",
-                //     no_of_tyres: "",
-                //     tone: "",
-                //     truck_name: ""
-                // })
-                // setShowingFromLocation("")
-                // setShowingToLocation("")
-
-            } else {
-                toast.error(res.data.message)
+                    setCards(reOrder)
+                    setCurrentPage(1)
+                    document.getElementById("closeFilterBox").click()
+                    setfilterButtonLoading(false)
+                } else {
+                    toast.error(res.data.message)
+                    setfilterButtonLoading(false)
+                }
             }
-        }
-        catch (err) {
-            console.log(err)
+            catch (err) {
+                console.log(err)
+                setfilterButtonLoading(false)
+            }
+        } else {
+            toast.error("nothing to filter")
         }
     }
 
@@ -524,24 +502,8 @@ const TruckAvailability = () => {
                     <div className="row gy-4">
                         <div className="col-12 col-md-6">
                             <h6>Vehicle Number</h6>
-                            {/* <div className="input-item input-item-email">
-                                <input
-                                    type="tel"
-                                    name="contact_no"
-                                    className="mb-0"
-                                    placeholder="Type your Vehicle Number"
-                                    value={editingData.vehicle_number}
-                                    onChange={(e) =>
-                                        setEditingData({
-                                            ...editingData,
-                                            vehicle_number: e.target.value,
-                                        })
-                                    }
-                                    required
-                                />
-                            </div> */}
                             <Select create={true} options={vehicleList} className='selectBox-innerWidth' onChange={(e) => setEditingData({
-                                ...editingData, 
+                                ...editingData,
                                 vehicle_number: e,
                             })} />
                         </div>
@@ -691,7 +653,6 @@ const TruckAvailability = () => {
                         </div>
                         <div className="col-12 col-md-6">
                             <h6>To</h6>
-                            {/* <Select options={userStateList} className='selectBox-innerWidth' onChange={(e) => setSelectToLocationSingle(e)} /> */}
                             <div className="input-item input-item-name">
                                 <Autocomplete name="to_location"
                                     className="google-location location-input bg-transparent py-2 mb-0"
@@ -750,7 +711,16 @@ const TruckAvailability = () => {
                         </div>
                     </div>
                     <div className="modal-footer btn-wrapper text-center mt-3">
-                        <button className="btn btn-primary text-uppercase" type="button" onClick={handleSubmit}>Submit</button>
+                        {
+                            submitLoadLoading ?
+                                <button type="button" className="btn btn-primary w-100">
+                                    <div class="spinner-border" role="status">
+                                        <span class="visually-hidden">Saving...</span>
+                                    </div>
+                                </button>
+                                :
+                                <button className="btn btn-primary" type="button" onClick={handleSubmit}>Submit</button>
+                        }
                     </div>
                 </div>
 
@@ -762,6 +732,26 @@ const TruckAvailability = () => {
     const handleMessageClick = (card) => {
         navigate(`/chat?person_id=${card.user_id}`);
     };
+
+    const handleClearFilterReset = () => {
+        fetchData()
+        setShowingFromLocation("")
+        setShowingToLocation("")
+        SetfilterModelData({
+            user_id: "",
+            vehicle_number: "",
+            company_name: "",
+            contact_no: "",
+            from_location: "",
+            to_location: "",
+            truck_brand_name: "",
+            truck_body_type: "",
+            no_of_tyres: "",
+            tone: "",
+            truck_name: ""
+        })
+    }
+
 
 
     return (
@@ -808,7 +798,7 @@ const TruckAvailability = () => {
                                 </div>
 
                                 <div className="col-6 col-lg-2 ">
-                                    <button type="button" className="btn btn-secondary filterbtn" onClick={() => fetchData()}>Clear filter</button>
+                                    <button type="button" className="btn btn-secondary filterbtn" onClick={() => handleClearFilterReset()}>Clear filter</button>
                                 </div>
 
 
@@ -864,7 +854,7 @@ const TruckAvailability = () => {
                                     </div>
                                     <div className="col-12 col-md-6">
                                         <h6>To</h6>
-                                        <Select multi options={userStateList} className='selectBox-innerWidth' onChange={(e) => setSelectToLocationMultiple(e)} />
+                                        <Select multi create={true} options={userStateList} className='selectBox-innerWidth' onChange={(e) => setSelectToLocationMultiple(e)} />
                                     </div>
 
                                     <div className="col-12 col-md-6">
@@ -961,7 +951,16 @@ const TruckAvailability = () => {
                             </div>
                         </div>
                         <div className="modal-footer">
-                            <button type="button" className="btn btn-primary" onClick={handleApplyFilter}>Apply Filter</button>
+                            {
+                                filterButtonLoading ?
+                                    <button type="button" className="btn btn-primary w-100">
+                                        <div class="spinner-border" role="status">
+                                            <span class="visually-hidden">filtering...</span>
+                                        </div>
+                                    </button>
+                                    :
+                                    <button type="button" className="btn btn-primary" onClick={handleApplyFilter}>Apply Filter</button>
+                            }
                         </div>
                     </div>
                 </div>

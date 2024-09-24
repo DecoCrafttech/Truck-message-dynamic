@@ -43,15 +43,16 @@ const WishList = () => {
     "Others",
   ]
   const truckBodyType = ["LCV", "Bus", "Open body vehicle", "Tanker", "Trailer", "Tipper"];
-  const numOfTyres = [4,
-    6,
-    10,
-    12,
-    14,
-    16,
-    18,
-    20,
-    22]
+  const numOfTyres = [
+    "4",
+    "6",
+    "10",
+    "12",
+    "14",
+    "16",
+    "18",
+    "20",
+    "22"]
 
   const [contactError, setContactError] = useState("");
   const [editingData, setEditingData] = useState({
@@ -62,6 +63,7 @@ const WishList = () => {
     no_of_tyres: "",
     tone: "",
     truck_body_type: "",
+    tonnage: ""
   });
   const [driverDetailsEditingData, setDriverDetailsEditingData] = useState({
     driver_name: "",
@@ -77,6 +79,8 @@ const WishList = () => {
   const [showingBuyAndSellLocation, setShowingBuyAndSellLocation] = useState("");
   const [deletingData, setDeletingData] = useState({});
   const [feedbackRadio, setFeedbackRadio] = useState("YES");
+  const [deleteButtonLoading, setDeleteButtonLoading] = useState(false);
+  const [updateButtonLoading, setupdateButtonLoading] = useState(false)
   const [feedback, setfeedback] = useState({
     feedbackCnt: "",
     mobNum: "",
@@ -189,7 +193,15 @@ const WishList = () => {
           })
           .then((response) => {
             if (response.data.success && Array.isArray(response.data.data)) {
-              setData(response.data.data);
+              if (window.location.pathname === "/Truck-message-dynamic/wishlist/buy_sell") {
+                const tonnageEdited = response.data.data.map((v) => {
+                  const tonnageNumber = v.tonnage.split(" ")[0]
+                  return { ...v, tonnage: tonnageNumber }
+                })
+                setData(tonnageEdited)
+              } else {
+                setData(response.data.data);
+              }
               setGettingDetails(false);
             } else {
               console.error("Unexpected response format:", response.data);
@@ -260,6 +272,7 @@ const WishList = () => {
           buy_sell_id: JSON.stringify(editingData.buy_sell_id),
           user_id: userId,
         };
+        console.log(truck_buy_sell)
         handleUpdate("truck_buy_sell", truck_buy_sell);
         break;
       default:
@@ -285,7 +298,7 @@ const WishList = () => {
   };
 
   const handleUpdate = async (updationPath, updationData) => {
-    console.log(updationData)
+    setupdateButtonLoading(true)
     try {
       const res = await axios.post(
         `https://truck.truckmessage.com/${updationPath}`,
@@ -297,16 +310,16 @@ const WishList = () => {
         }
       );
 
-      console.log(res, "res")
       if (res.data.error_code === 0) {
         // initialRenderOne()
-        toast.success(res.data.message);
-
+        setupdateButtonLoading(false)
         closeModal();
       } else {
+        setupdateButtonLoading(false)
         toast.error(res.data.message);
       }
     } catch (error) {
+      setupdateButtonLoading(false)
       console.log("There was an error!", error);
     }
   };
@@ -345,6 +358,7 @@ const WishList = () => {
   };
 
   const hanldeDelete = async (deletionPath, deletionData) => {
+    setDeleteButtonLoading(true)
     try {
       const res = await axios.post(
         `https://truck.truckmessage.com/${deletionPath}`,
@@ -356,16 +370,16 @@ const WishList = () => {
         }
       );
       if (res.data.error_code === 0) {
-        toast.success(res.data.message);
         initialRenderOne()
-
+        setDeleteButtonLoading(false)
         document.getElementById("deleteCloseModel").click();
       } else {
+        setDeleteButtonLoading(false)
         toast.error(res.data.message);
       }
     } catch (error) {
+      setDeleteButtonLoading(false)
       toast.error("Failed to delete.");
-      console.error("There was an error!", error);
     }
   };
 
@@ -562,6 +576,7 @@ const WishList = () => {
     formData.append("vehicle_number", edit.vehicle_number);
     formData.append("truck_body_type", edit.truck_body_type);
     formData.append("no_of_tyres", edit.no_of_tyres);
+    formData.append("tonnage", edit.tonnage);
 
 
     if (multipleImages.length > 0) {
@@ -575,6 +590,7 @@ const WishList = () => {
     }
 
     try {
+      setupdateButtonLoading(true)
       const res = await axios.post(
         "https://truck.truckmessage.com/truck_buy_sell",
         formData,
@@ -587,12 +603,14 @@ const WishList = () => {
 
       if (res.data.error_code === 0) {
         document.getElementById("clodeBuySellModel").click();
-        toast.success(res.data.message);
+        setupdateButtonLoading(false)
         initialRender("user_buy_sell_details");
       } else {
+        setupdateButtonLoading(false)
         toast.error(res.data.message);
       }
     } catch (err) {
+      setupdateButtonLoading(false)
       console.log(err);
     }
   };
@@ -694,6 +712,7 @@ const WishList = () => {
                           feedbackCnt: "",
                           mobNum: "",
                         });
+                        setFeedbackRadio("YES")
                       }}
                     >
                       Delete
@@ -836,6 +855,7 @@ const WishList = () => {
                         });
                         setRating(0)
                         setHover(0)
+                        setFeedbackRadio("YES")
                       }}
                     >
                       Delete
@@ -966,6 +986,7 @@ const WishList = () => {
                         });
                         setRating(0)
                         setHover(0)
+                        setFeedbackRadio("YES")
                       }}
                     >
                       Delete
@@ -1112,6 +1133,7 @@ const WishList = () => {
                             });
                             setRating(0)
                             setHover(0)
+                            setFeedbackRadio("YES")
                           }}
                         >
                           Delete
@@ -1179,18 +1201,26 @@ const WishList = () => {
           .post(`https://truck.truckmessage.com/${tabEndpoint}`, data)
           .then((response) => {
             if (response.data.success && Array.isArray(response.data.data)) {
-              setData(response.data.data);
+              if (window.location.pathname === "/Truck-message-dynamic/wishlist/buy_sell") {
+                const tonnageEdited = response.data.data.map((v) => {
+                  const tonnageNumber = v.tonnage.split(" ")[0]
+                  console.log(v.tonnage)
+                  return { ...v, tonnage: tonnageNumber }
+                })
+                setData(tonnageEdited)
+              } else {
+                setData(response.data.data);
+              }
               setGettingDetails(false);
             } else {
-              console.error("Unexpected response format:", response.data);
               setGettingDetails(false);
             }
           })
           .catch((error) => {
-            console.error("There was an error fetching the data!", error);
             setGettingDetails(false);
           });
       } catch (err) {
+        setGettingDetails(false);
         toast.error(err);
       }
     } else {
@@ -1238,6 +1268,7 @@ const WishList = () => {
           </NavLink>
         </li>
       </ul>
+
       <div className="tab-content mt-3">{renderTabContent()}</div>
 
       {/* Modal 01 */}
@@ -1439,13 +1470,22 @@ const WishList = () => {
               >
                 Close
               </button>
-              <button
-                type="button"
-                className="btn btn-primary col-12 col-md-3"
-                onClick={handleChooseUpdate}
-              >
-                Save changes
-              </button>
+              {
+                updateButtonLoading ?
+                  <button type="button" className="btn btn-primary col-12 col-md-3">
+                    <div class="spinner-border" role="status">
+                      <span class="visually-hidden">Updating...</span>
+                    </div>
+                  </button>
+                  :
+                  <button
+                    type="button"
+                    className="btn btn-primary col-12 col-md-3"
+                    onClick={handleChooseUpdate}
+                  >
+                    Save changes
+                  </button>
+              }
             </div>
           </div>
         </div>
@@ -1691,13 +1731,22 @@ const WishList = () => {
               >
                 Close
               </button>
-              <button
-                type="button"
-                className="btn btn-primary col-12 col-md-3"
-                onClick={handleChooseUpdate}
-              >
-                Save changes
-              </button>
+              {
+                updateButtonLoading ?
+                  <button type="button" className="btn btn-primary col-12 col-md-3">
+                    <div class="spinner-border" role="status">
+                      <span class="visually-hidden">Updating...</span>
+                    </div>
+                  </button>
+                  :
+                  <button
+                    type="button"
+                    className="btn btn-primary col-12 col-md-3"
+                    onClick={handleChooseUpdate}
+                  >
+                    Save changes
+                  </button>
+              }
             </div>
           </div>
         </div>
@@ -1899,13 +1948,22 @@ const WishList = () => {
               >
                 Close
               </button>
-              <button
-                type="button"
-                className="btn btn-primary col-12 col-md-3"
-                onClick={handleChooseUpdate}
-              >
-                Save changes
-              </button>
+              {
+                updateButtonLoading ?
+                  <button type="button" className="btn btn-primary col-12 col-md-3">
+                    <div class="spinner-border" role="status">
+                      <span class="visually-hidden">Updating...</span>
+                    </div>
+                  </button>
+                  :
+                  <button
+                    type="button"
+                    className="btn btn-primary col-12 col-md-3"
+                    onClick={handleChooseUpdate}
+                  >
+                    Save changes
+                  </button>
+              }
             </div>
           </div>
         </div>
@@ -2093,6 +2151,27 @@ const WishList = () => {
                     </div>
                   </div>
 
+                  <div className="col-12 col-md-6 mt-3">
+                    <h6>Tonnage</h6>
+                    <div className="tel-item">
+                      <input
+                        type="number"
+                        name="Tonnage"
+                        className="w-100 py-3 mt-2 m-0"
+                        placeholder="Enter your ton..."
+                        min={1}
+                        value={editingData.tonnage}
+                        onChange={(e) =>
+                          setEditingData({
+                            ...editingData,
+                            tonnage: e.target.value
+                          })
+                        }
+                        required
+                      />
+                    </div>
+                  </div>
+
                   <div className="col-12 col-md-6">
                     <h6>Truck Body Type</h6>
                     <button type="button" class="btn btn-transparent shadow-none border dropdown-toggle col-12 py-3 dropdown-arrow text-start" data-bs-toggle="dropdown" aria-expanded="false">
@@ -2215,13 +2294,22 @@ const WishList = () => {
                   >
                     Close
                   </button>
-                  <button
-                    type="button"
-                    className="btn btn-primary col-12 col-md-3"
-                    onClick={handleBuyAndSellUpdate}
-                  >
-                    Save changes
-                  </button>
+                  {
+                    updateButtonLoading ?
+                      <button type="button" className="btn btn-primary col-12 col-md-3">
+                        <div class="spinner-border" role="status">
+                          <span class="visually-hidden">Updating...</span>
+                        </div>
+                      </button>
+                      :
+                      <button
+                        type="button"
+                        className="btn btn-primary col-12 col-md-3"
+                        onClick={handleBuyAndSellUpdate}
+                      >
+                        Save changes
+                      </button>
+                  }
                 </div>
               </div>
             </div>
@@ -2371,13 +2459,22 @@ const WishList = () => {
               >
                 Close
               </button>
-              <button
-                type="button"
-                className="btn btn-primary col-12 col-md-3"
-                onClick={handleSubmitFeedback}
-              >
-                Submit
-              </button>
+              {
+                deleteButtonLoading ?
+                  <button type="button" className="btn btn-primary col-12 col-md-3">
+                    <div class="spinner-border" role="status">
+                      <span class="visually-hidden">Deleting...</span>
+                    </div>
+                  </button>
+                  :
+                  <button
+                    type="button"
+                    className="btn btn-primary col-12 col-md-3"
+                    onClick={handleSubmitFeedback}
+                  >
+                    Submit
+                  </button>
+              }
             </div>
           </div>
         </div>

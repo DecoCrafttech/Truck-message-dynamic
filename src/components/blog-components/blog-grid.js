@@ -68,12 +68,15 @@ const BlogGrid = () => {
     const [selectedContactNum, setSelectedContactNum] = useState(null)
     const [viewContactId, setviewContactId] = useState(null)
 
+    const [submitLoadLoading, setSubmitLoadLoading] = useState(false);
+    const [filterButtonLoading, setfilterButtonLoading] = useState(false);
+
     const [contactError, setContactError] = useState(''); // State to manage contact number validation error
     const [userStateList, setUserStateList] = useState([])
     const [selectToLocationMultiple, setSelectToLocationMultiple] = useState([]);
     const [vehicleList, setVehicleList] = useState([]);
     const [showingFromLocation, setShowingFromLocation] = useState("");
-    const [showingToLocation, setShowingToLocation] = useState(""); 
+    const [showingToLocation, setShowingToLocation] = useState("");
 
     const getVehicleList = async () => {
         const userId = Cookies.get("usrin") ? window.atob(Cookies.get("usrin")) : '';
@@ -98,7 +101,7 @@ const BlogGrid = () => {
                     .catch((err) => {
                         console.log(err)
                     })
-            }  
+            }
         } catch (err) {
             console.log(err)
         }
@@ -106,20 +109,6 @@ const BlogGrid = () => {
 
 
     const fetchData = async () => {
-        SetfilterModelData({
-            user_id: "",
-            driver_name: "",
-            vehicle_number: "",
-            company_name: "",
-            contact_no: "",
-            from: "",
-            to: "",
-            truck_body_type: "",
-            no_of_tyres: "",
-            description: '',
-            truck_name: ''
-        })
-        setShowingFromLocation("")
         setInitialLoading(true)
         try {
             const response = await axios.get('https://truck.truckmessage.com/all_driver_details');
@@ -199,13 +188,6 @@ const BlogGrid = () => {
     };
 
     const handleCopy = (contactNo, cardId) => {
-        // navigator.clipboard.writeText(contactNo)
-        //     .then(() => {
-        //         toast.success('Contact number copied!'); // Optional, show a success message
-        //     })
-        //     .catch(() => {
-        //         toast.error('Failed to copy contact number.');
-        //     });
         setSelectedContactNum(null)
 
         setviewContactId(cardId)
@@ -222,7 +204,7 @@ const BlogGrid = () => {
 
     const handleSubmit = async () => {
         const userId = window.atob(Cookies.get("usrin"));
-        const sendVehicleNumber = editingData.vehicle_number.length > 0 ? editingData.vehicle_number[0].label : '' ;
+        const sendVehicleNumber = editingData.vehicle_number.length > 0 ? editingData.vehicle_number[0].label : '';
 
         const data = {
             ...editingData,
@@ -239,7 +221,7 @@ const BlogGrid = () => {
                     setContactError('Please enter a valid 10-digit contact number.');
                     return;
                 }
-
+                setSubmitLoadLoading(true)
                 const res = await axios.post('https://truck.truckmessage.com/driver_entry', data, {
                     headers: {
                         'Content-Type': 'application/json'
@@ -248,8 +230,8 @@ const BlogGrid = () => {
 
                 if (res.data.error_code === 0) {
                     document.getElementById('closeAddModel').click()
-                    toast.success(res.data.message);
                     fetchData()
+                    setSubmitLoadLoading(false);
 
                     setEditingData({
                         driver_name: "",
@@ -264,12 +246,15 @@ const BlogGrid = () => {
                     setShowingToLocation("")
                 }
                 else {
+                    setSubmitLoadLoading(false);
                     toast.error(res.data.message);
                 }
             } else {
+                setSubmitLoadLoading(false);
                 toast.error('Some fields are missing');
             }
         } catch (err) {
+            setSubmitLoadLoading(false);
             console.log(err)
         }
     };
@@ -294,7 +279,7 @@ const BlogGrid = () => {
             const cityComponent = selectedLocation.find(component => component.types.includes('locality'));
             const stateComponent = selectedLocation.find(component => component.types.includes('administrative_area_level_1'));
 
-            if (cityComponent && stateComponent) {             
+            if (cityComponent && stateComponent) {
                 setShowingFromLocation(`${cityComponent.long_name}, ${stateComponent.long_name}`);
             }
         }
@@ -312,36 +297,40 @@ const BlogGrid = () => {
     };
 
     const handleApplyFilter = async () => {
-        const spreadMultipleLocation = selectToLocationMultiple.map((v) => v.label)
-
+        const spreadMultipleLocation = selectToLocationMultiple.map((v) => v.label) 
         const filterObj = { ...filterModelData }
         filterObj.from_location = showingFromLocation
         filterObj.to_location = spreadMultipleLocation
-
-        try {
-            const res = await axios.post("https://truck.truckmessage.com/user_driver_details_filter", filterObj, {
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            })
-
-            if (res.data.error_code === 0) {
-                const reOrder = res.data.data.sort(function (a, b) {
-                    if (new Date(a.updt) > new Date(b.updt)) {
-                        return -1
+        if (filterModelData.from_location || spreadMultipleLocation.length > 0 || filterModelData.truck_body_type || filterModelData.no_of_tyres) {
+            setfilterButtonLoading(true)
+            try {
+                const res = await axios.post("https://truck.truckmessage.com/user_driver_details_filter", filterObj, {
+                    headers: {
+                        'Content-Type': 'application/json'
                     }
                 })
-                setCards(reOrder)
-                setCurrentPage(1)
 
-                toast.success(res.data.message)
-                document.getElementById("closeFilterBox").click()
-            } else {
-                toast.error(res.data.message)
+                if (res.data.error_code === 0) {
+                    const reOrder = res.data.data.sort(function (a, b) {
+                        if (new Date(a.updt) > new Date(b.updt)) {
+                            return -1
+                        }
+                    })
+                    setCards(reOrder)
+                    setCurrentPage(1)
+                    setfilterButtonLoading(false)
+                    document.getElementById("closeFilterBox").click()
+                } else {
+                    setfilterButtonLoading(false)
+                    toast.error(res.data.message)
+                }
             }
-        }
-        catch (err) {
-            console.log(err)
+            catch (err) {
+                setfilterButtonLoading(false)
+                console.log(err)
+            }
+        } else {
+            toast.error("nothing to filter")
         }
     }
 
@@ -493,24 +482,8 @@ const BlogGrid = () => {
                     <div className="row gy-4">
                         <div className="col-12 col-md-6">
                             <h6>Vehicle Number</h6>
-                            {/* <div className="input-item input-item-email">
-                                <input
-                                    type="tel"
-                                    name="contact_no"
-                                    className="mb-0"
-                                    placeholder="Type your Vehicle Number"
-                                    value={editingData.vehicle_number}
-                                    onChange={(e) =>
-                                        setEditingData({
-                                            ...editingData,
-                                            vehicle_number: e.target.value,
-                                        })
-                                    }
-                                    required
-                                />
-                            </div> */}
-                             <Select create={true} options={vehicleList} className='selectBox-innerWidth' onChange={(e) => setEditingData({
-                                ...editingData, 
+                            <Select create={true} options={vehicleList} className='selectBox-innerWidth' onChange={(e) => setEditingData({
+                                ...editingData,
                                 vehicle_number: e,
                             })} />
                         </div>
@@ -654,7 +627,16 @@ const BlogGrid = () => {
                         </div>
                     </div>
                     <div className="modal-footer btn-wrapper text-center mt-4">
-                        <button className="btn btn-primary text-uppercase" type="button" onClick={handleSubmit}>Submit</button>
+                        {
+                            submitLoadLoading ?
+                                <button type="button" className="btn btn-primary w-100">
+                                    <div class="spinner-border" role="status">
+                                        <span class="visually-hidden">Saving...</span>
+                                    </div>
+                                </button>
+                                :
+                                <button className="btn btn-primary text-uppercase" type="button" onClick={handleSubmit}>Submit</button>
+                        }
                     </div>
                 </div>
 
@@ -666,6 +648,23 @@ const BlogGrid = () => {
     const handleMessageClick = (card) => {
         navigate(`/chat?person_id=${card.user_id}`);
     };
+
+    const handleClearReset = () =>{
+        SetfilterModelData({
+            user_id: "",
+            driver_name: "",
+            vehicle_number: "",
+            company_name: "",
+            contact_no: "",
+            from: "",
+            to: "",
+            truck_body_type: "",
+            no_of_tyres: "",
+            description: '',
+            truck_name: ''
+        })
+        setShowingFromLocation("")
+    }
 
     return (
         <div>
@@ -711,7 +710,7 @@ const BlogGrid = () => {
                                 </div>
 
                                 <div className="col-6 col-lg-2 ">
-                                    <button type="button" className="btn btn-secondary filterbtn" onClick={() => fetchData()}>Clear filter</button>
+                                    <button type="button" className="btn btn-secondary filterbtn" onClick={() => handleClearReset()}>Clear filter</button>
                                 </div>
 
 
@@ -768,8 +767,8 @@ const BlogGrid = () => {
                                     </div>
 
                                     <div className="col-12 col-md-6">
-                                        <h6>To</h6> 
-                                        <Select multi options={userStateList} className='selectBox-innerWidth' onChange={(e) => setSelectToLocationMultiple(e)} />
+                                        <h6>To</h6>
+                                        <Select multi create={true} options={userStateList} className='selectBox-innerWidth' onChange={(e) => setSelectToLocationMultiple(e)} />
                                     </div>
 
                                     <div className="col-12 col-md-6 m-0">
@@ -803,18 +802,20 @@ const BlogGrid = () => {
                                             }
                                         </ul >
                                     </div>
-
-                                    {/* <div className="col-12 col-md-6">
-                                        <h6>Ton</h6>
-                                        <div className="input-item input-item-name ltn__custom-icon">
-                                            <input type="text" name="tone" placeholder="Example: 2 tones" onChange={(e) => SetfilterModelData({ ...filterModelData, tone: e.target.value })} />
-                                        </div>
-                                    </div> */}
                                 </div>
                             </div>
                         </div>
                         <div className="modal-footer">
-                            <button type="button" className="btn btn-primary" onClick={handleApplyFilter}>Apply Filter</button>
+                            {
+                                filterButtonLoading ?
+                                    <button type="button" className="btn btn-primary w-100">
+                                        <div class="spinner-border" role="status">
+                                            <span class="visually-hidden">filtering...</span>
+                                        </div>
+                                    </button>
+                                    :
+                                    <button type="button" className="btn btn-primary" onClick={handleApplyFilter}>Apply Filter</button>
+                            }
                         </div>
                     </div>
                 </div>
@@ -868,7 +869,7 @@ const BlogGrid = () => {
                                                 <div className="col-lg-12 cardicon">
                                                     <div><label><FaLocationDot className='me-2 text-success' />{card.to_location}</label></div>
                                                 </div>
-                                                <p className='datetext'><strong><RiMapPinTimeFill className='me-2' />Posted on :</strong> {card.updt ? card.updt.slice(5, 25): ''}</p>
+                                                <p className='datetext'><strong><RiMapPinTimeFill className='me-2' />Posted on :</strong> {card.updt ? card.updt.slice(5, 25) : ''}</p>
                                             </div>
                                             <hr className="hr m-2" />
                                             <div className='row mt-3'>

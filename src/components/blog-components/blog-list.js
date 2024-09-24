@@ -43,15 +43,16 @@ const BlogList = () => {
     "Volvo",
     "Others",
   ]
-  const numOfTyres = [4,
-    6,
-    10,
-    12,
-    14,
-    16,
-    18,
-    20,
-    22
+  const numOfTyres = [
+    "4",
+    "6",
+    "10",
+    "12",
+    "14",
+    "16",
+    "18",
+    "20",
+    "22"
   ]
   const filterKilometers = [
     '(0 - 10,000)',
@@ -96,9 +97,7 @@ const BlogList = () => {
   const [cards, setCards] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [cardsPerPage] = useState(21);
-  const [filters, setFilters] = useState({
-    search: "",
-  });
+  const [filters, setFilters] = useState({ search: "" });
 
   const [filterModelData, SetfilterModelData] = useState({
     user_id: "",
@@ -133,6 +132,7 @@ const BlogList = () => {
   const [showingFromLocation, setShowingFromLocation] = useState("");
   const [showingToLocation, setShowingToLocation] = useState("");
   const [isDataFiltered, setIsDataFiltered] = useState(false);
+  const [submitLoadLoading, setSubmitLoadLoading] = useState(false);
   const [selectBoxtonnage, setSelectBoxTonnage] = useState([])
 
   const handleLocation = (selectedLocation) => {
@@ -153,7 +153,7 @@ const BlogList = () => {
   };
 
   const handleApplyFilter = async () => {
-    setFilterLoading(true);
+
     const filterObj = { ...filterModelData };
     filterObj.location = showingFromLocation;
     if (filterModelData.kms_driven) {
@@ -171,37 +171,40 @@ const BlogList = () => {
     if (filterModelData.brand) {
       filterObj.brand = [filterObj.brand];
     }
-
+ 
     setIsDataFiltered(true);
-
-    try {
-      const res = await axios.post(
-        "https://truck.truckmessage.com/user_buy_sell_filter",
-        filterObj,
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
-
-      if (res.data.error_code === 0) {
-        const reOrder = res.data.data.sort(function (a, b) {
-          if (new Date(a.updt) > new Date(b.updt)) {
-            return -1
+    if (filterObj.brand.length > 0 || filterObj.kms_driven || filterObj.model.length > 0 || filterObj.no_of_tyres.length > 0 || filterObj.price.length > 0 || filterObj.tonnage.length > 0 || filterObj.truck_body_type.length > 0) {
+      try {
+        setFilterLoading(true);
+        const res = await axios.post(
+          "https://truck.truckmessage.com/user_buy_sell_filter",
+          filterObj,
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
           }
-        })
-        setCards(reOrder)
-        setCurrentPage(1)
+        );
 
-        toast.success(res.data.message);
-        document.getElementById("closeFilterBox").click();
-      } else {
-        toast.error(res.data.message);
+        if (res.data.error_code === 0) {
+          const reOrder = res.data.data.sort(function (a, b) {
+            if (new Date(a.updt) > new Date(b.updt)) {
+              return -1
+            }
+          })
+          setCards(reOrder)
+          setCurrentPage(1)
+          document.getElementById("closeFilterBox").click();
+        } else {
+          toast.error(res.data.message);
+        }
+        setFilterLoading(false);
+      } catch (err) {
+        console.log(err);
+        setFilterLoading(false);
       }
-      setFilterLoading(false);
-    } catch (err) {
-      console.log(err);
+    } else {
+      toast.error("nothing to filter")
     }
   };
 
@@ -209,6 +212,22 @@ const BlogList = () => {
     setclearFilterLoading(true)
     initialRender();
     setSelectBoxTonnage([])
+
+    SetfilterModelData({
+      user_id: "",
+      brand: "",
+      contact_no: "",
+      kms_driven: "",
+      model: "",
+      owner_name: "",
+      vehicle_number: "",
+      location: "",
+      truck_body_type: '',
+      no_of_tyres: '',
+      price: '',
+      tonnage: []
+    })
+    setShowingFromLocation("")
   }
 
   const filterCards = (cards) => {
@@ -277,20 +296,6 @@ const BlogList = () => {
           setIsDataFiltered(false);
           setFilterLoading(false);
           setclearFilterLoading(false);
-          SetfilterModelData({
-            user_id: "",
-            brand: "",
-            contact_no: "",
-            kms_driven: "",
-            model: "",
-            owner_name: "",
-            vehicle_number: "",
-            location: "",
-            truck_body_type: '',
-            no_of_tyres: '',
-            price: '',
-            tonnage: []
-          })
         })
         .catch((error) => {
           setInitialLoading(false)
@@ -402,7 +407,7 @@ const BlogList = () => {
     formData.append("vehicle_number", edit.vehicle_number);
     formData.append("truck_body_type", editingData.truck_body_type)
     formData.append("no_of_tyres", editingData.no_of_tyres)
-    formData.append("tonnage", editingData.tonnage!=='' ? `${editingData.tonnage} Ton ` : '')
+    formData.append("tonnage", editingData.tonnage !== '' ? `${editingData.tonnage} Ton ` : '')
 
 
     if (editingData.tonnage.length > 0 && editingData.no_of_tyres && editingData.truck_body_type && edit.vehicle_number && edit.owner_name && edit.brand && edit.contact_no && edit.price && edit.kms_driven && showingBuyAndSellLocation && edit.model) {
@@ -416,6 +421,7 @@ const BlogList = () => {
         }
 
         try {
+          setSubmitLoadLoading(true)
           const res = await axios.post(
             "https://truck.truckmessage.com/truck_buy_sell",
             formData,
@@ -428,16 +434,19 @@ const BlogList = () => {
 
           if (res.data.error_code === 0) {
             document.getElementById("clodeBuySellModel").click();
-            toast.success(res.data.message);
+            setSubmitLoadLoading(false)
             initialRender();
           } else {
+            setSubmitLoadLoading(false)
             toast.error(res.data.message);
           }
           setCreateVehicleLoading(false);
         } catch (err) {
+          setSubmitLoadLoading(false)
           console.log(err);
         }
       } else {
+        setSubmitLoadLoading(false)
         toast.error("Image required");
       }
     } else {
@@ -1524,7 +1533,7 @@ const BlogList = () => {
                                 {card.location}
                               </label>
                             </div>
-                            <p className='datetext mb-3'><strong><RiMapPinTimeFill className='me-2' />Posted on :</strong> {card.updt ? card.updt.slice(5, 25): ''}</p>
+                            <p className='datetext mb-3'><strong><RiMapPinTimeFill className='me-2' />Posted on :</strong> {card.updt ? card.updt.slice(5, 25) : ''}</p>
                             <div>
                               <div className="row">
                                 <div className="col-6 col-md-6 cardicontext">

@@ -27,7 +27,8 @@ const PortfolioV1 = () => {
     const truckBodyType = ["LCV", "Open body vehicle", "Tanker", "Trailer", "Tipper", "Container"];
     const numOfTyres = [4, 6, 10, 12, 14, 16, 18, 20, 22];
     const [initialLoading, setInitialLoading] = useState(false);
-
+    const [submitLoadLoading, setSubmitLoadLoading] = useState(false);
+    const [filterButtonLoading, setfilterButtonLoading] = useState(false);
 
     const [filters, setFilters] = useState({
         search: '',
@@ -80,7 +81,7 @@ const PortfolioV1 = () => {
                         console.error('Unexpected response format:', response.data);
                         setInitialLoading(false)
                     }
-                    
+
                 })
                 .catch(error => {
                     console.error('There was an error fetching the data!', error);
@@ -136,6 +137,7 @@ const PortfolioV1 = () => {
 
     const handleSubmit = async () => {
         try {
+            setSubmitLoadLoading(true);
             const userId = window.atob(Cookies.get("usrin"));
             const data = {
                 company_name: editingData.company_name,
@@ -176,16 +178,21 @@ const PortfolioV1 = () => {
                         })
                         setShowingFromLocation("")
                         setShowingToLocation("")
+                        setSubmitLoadLoading(false);
                     })
                     .catch(error => {
-                        toast.error('Failed to submit the form.');
-                        console.error('There was an error!', error);
+                        toast.error('Failed to submit the form.', error);
+                        setSubmitLoadLoading(false);
+
                     });
             } else {
                 toast.error('Some fields are missing');
+                setSubmitLoadLoading(false);
+
             }
         } catch (err) {
             console.log(err)
+            setSubmitLoadLoading(false);
         }
     };
 
@@ -197,22 +204,10 @@ const PortfolioV1 = () => {
     const indexOfFirstCard = indexOfLastCard - cardsPerPage;
     // Get the cards to be displayed on the current page
     const currentCards = filteredCards.slice(indexOfFirstCard, indexOfLastCard);
-
     // Calculate the total number of pages
     const totalPages = Math.ceil(filteredCards.length / cardsPerPage);
-
     // Handle page change
     const paginate = (pageNumber) => setCurrentPage(pageNumber);
-
-    const [editCompanyFromLocation, setEditCompanyFromLocation] = useState({
-        city: "",
-        state: "",
-    });
-    const [editCompanyToLocation, setEditCompanyToLocation] = useState({
-        city: "",
-        state: "",
-    });
-
     const [viewContactId, setviewContactId] = useState(null)
 
     const handleFromLocation = (selectedLocation) => {
@@ -221,10 +216,6 @@ const PortfolioV1 = () => {
             const stateComponent = selectedLocation.find(component => component.types.includes('administrative_area_level_1'));
 
             if (cityComponent && stateComponent) {
-                setEditCompanyFromLocation({
-                    city: cityComponent.long_name,
-                    state: stateComponent.long_name,
-                });
                 setShowingFromLocation(`${cityComponent.long_name}, ${stateComponent.long_name}`);
             }
         }
@@ -236,10 +227,6 @@ const PortfolioV1 = () => {
             const stateComponent = selectedLocation.find(component => component.types.includes('administrative_area_level_1'));
 
             if (cityComponent && stateComponent) {
-                setEditCompanyToLocation({
-                    city: cityComponent.long_name,
-                    state: stateComponent.long_name,
-                });
                 setShowingToLocation(`${cityComponent.long_name}, ${stateComponent.long_name}`);
             }
         }
@@ -249,31 +236,37 @@ const PortfolioV1 = () => {
         const filterObj = { ...filterModelData }
         filterObj.from_location = showingFromLocation
         filterObj.to_location = showingToLocation
-
-        try {
-            const res = await axios.post("https://truck.truckmessage.com/user_load_details_filter", filterObj, {
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            })
-
-            if (res.data.error_code === 0) {
-                const reOrder = res.data.data.sort(function (a, b) {
-                    if (new Date(a.updt) > new Date(b.updt)) {
-                        return -1
+        if (filterObj.from_location || filterObj.to_location || filterObj.truck_body_type || filterObj.no_of_tyres || filterObj.material || filterObj.tone) {
+            setfilterButtonLoading(true)
+            try {
+                const res = await axios.post("https://truck.truckmessage.com/user_load_details_filter", filterObj, {
+                    headers: {
+                        'Content-Type': 'application/json'
                     }
                 })
-                setCards(reOrder)
-                setCurrentPage(1)
 
-                toast.success(res.data.message)
-                document.getElementById("closeFilterBox").click()
-            } else {
-                toast.error(res.data.message)
+                if (res.data.error_code === 0) {
+                    const reOrder = res.data.data.sort(function (a, b) {
+                        if (new Date(a.updt) > new Date(b.updt)) {
+                            return -1
+                        }
+                    })
+                    setCards(reOrder)
+                    setCurrentPage(1)
+
+                    document.getElementById("closeFilterBox").click()
+                    setfilterButtonLoading(false)
+                } else {
+                    toast.error(res.data.message)
+                    setfilterButtonLoading(false)
+                }
             }
-        }
-        catch (err) {
-            console.log(err)
+            catch (err) {
+                console.log(err)
+                setfilterButtonLoading(false)
+            }
+        } else {
+            toast.error("nothing to filter")
         }
     }
 
@@ -585,7 +578,16 @@ const PortfolioV1 = () => {
                         </div>
                     </div>
                     <div className="modal-footer btn-wrapper text-center mt-4">
-                        <button className="btn btn-primary theme-btn-1 text-uppercase" type="button" onClick={handleSubmit}>Submit</button>
+                        {
+                            submitLoadLoading ?
+                                <button type="button" className="btn btn-primary w-100">
+                                    <div class="spinner-border" role="status">
+                                        <span class="visually-hidden">Saving...</span>
+                                    </div>
+                                </button>
+                                :
+                                <button className="btn btn-primary theme-btn-1 text-uppercase" type="button" onClick={handleSubmit}>Submit</button>
+                        }
                     </div>
                 </div>
 
@@ -597,6 +599,22 @@ const PortfolioV1 = () => {
     const handleMessageClick = (card) => {
         navigate(`/chat?person_id=${card.user_id}`);
     };
+
+    const handleClearFilterReset = () =>{
+        fetchData()
+        setShowingFromLocation("")
+        setShowingToLocation("")
+        SetfilterModelData({
+            company_name: "",
+            user_id: "",
+            from_location: "",
+            to_location: "",
+            truck_body_type: "",
+            no_of_tyres: "",
+            material: "",
+            tone: ""
+        })
+    }
 
     return (
         <div>
@@ -641,7 +659,7 @@ const PortfolioV1 = () => {
                                 </div>
 
                                 <div className="col-6 col-lg-2 ">
-                                    <button type="button" className="btn btn-secondary filterbtn" onClick={() => fetchData()}>Clear filter</button>
+                                    <button type="button" className="btn btn-secondary filterbtn" onClick={() => handleClearFilterReset()}>Clear filter</button>
                                 </div>
 
                             </div>
@@ -755,7 +773,17 @@ const PortfolioV1 = () => {
                             </div>
                         </div>
                         <div className="modal-footer">
-                            <button type="button" className="btn btn-primary" onClick={handleApplyFilter}>Apply Filter</button>
+                            {
+                                filterButtonLoading ?
+                                    <button type="button" className="btn btn-primary w-100">
+                                        <div class="spinner-border" role="status">
+                                            <span class="visually-hidden">filtering...</span>
+                                        </div>
+                                    </button>
+                                    :
+                                    <button type="button" className="btn btn-primary" onClick={handleApplyFilter}>Apply Filter</button>
+                            }
+
                         </div>
                     </div>
                 </div>
@@ -812,7 +840,7 @@ const PortfolioV1 = () => {
                                                     <div className="col-lg-12 cardicon">
                                                         <div><label><FaLocationDot className='me-2 text-success' />{card.to_location}</label></div>
                                                     </div>
-                                                    <p className='datetext'><strong><RiMapPinTimeFill className='me-2' />Posted on :</strong> {card.updt ? card.updt.slice(5, 25): ''}</p>
+                                                    <p className='datetext'><strong><RiMapPinTimeFill className='me-2' />Posted on :</strong> {card.updt ? card.updt.slice(5, 25) : ''}</p>
                                                 </div>
                                                 <hr className="hr m-2" />
                                                 <div className='row mt-3'>

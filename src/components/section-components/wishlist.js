@@ -105,16 +105,16 @@ const WishList = () => {
   const initialRenderOne = () => {
     const getPath = window.location.pathname;
     switch (getPath) {
-      case "/wishlist/load":
+      case "/Truck-message-dynamic/wishlist/load":
         initialRender("user_load_details");
         break;
-      case "/wishlist/truck":
+      case "/Truck-message-dynamic/wishlist/truck":
         initialRender("user_truck_details");
         break;
-      case "/wishlist/driver":
+      case "/Truck-message-dynamic/wishlist/driver":
         initialRender("user_driver_details");
         break;
-      case "/wishlist/buy_sell":
+      case "/Truck-message-dynamic/wishlist/buy_sell":
         initialRender("user_buy_sell_details");
         break;
       default:
@@ -211,7 +211,7 @@ const WishList = () => {
   const handleChooseUpdate = async () => {
     const getPath = window.location.pathname;
     switch (getPath) {
-      case "/wishlist/load":
+      case "/Truck-message-dynamic/wishlist/load":
         var userId = window.atob(Cookies.get("usrin"));
         const load_details = {
           ...editingData,
@@ -222,7 +222,7 @@ const WishList = () => {
         };
         handleUpdate("load_details", load_details);
         break;
-      case "/wishlist/truck":
+      case "/Truck-message-dynamic/wishlist/truck":
         var userId = window.atob(Cookies.get("usrin"));
         const truck_entry = {
           ...editingData,
@@ -233,7 +233,7 @@ const WishList = () => {
         };
         handleUpdate("truck_entry", truck_entry);
         break;
-      case "/wishlist/driver":
+      case "/Truck-message-dynamic/wishlist/driver":
         var userId = window.atob(Cookies.get("usrin"));
         const driver_entry = {
           driver_name: driverDetailsEditingData.driver_name,
@@ -251,7 +251,7 @@ const WishList = () => {
         };
         handleUpdate("driver_entry", driver_entry);
         break;
-      case "/wishlist/buy_sell":
+      case "/Truck-message-dynamic/wishlist/buy_sell":
         var userId = window.atob(Cookies.get("usrin"));
         const truck_buy_sell = {
           ...editingData,
@@ -271,13 +271,13 @@ const WishList = () => {
     initialRenderOne()
     const getPath = window.location.pathname;
     switch (getPath) {
-      case "/wishlist/load":
+      case "/Truck-message-dynamic/wishlist/load":
         return document.getElementById("closeModelOne").click();
-      case "/wishlist/truck":
+      case "/Truck-message-dynamic/wishlist/truck":
         return document.getElementById("closeModelTwo").click();
-      case "/wishlist/driver":
+      case "/Truck-message-dynamic/wishlist/driver":
         return document.getElementById("closeModelThree").click();
-      case "/wishlist/buy_sell":
+      case "/Truck-message-dynamic/wishlist/buy_sell":
         return document.getElementById("closeModelOne").click();
       default:
         break;
@@ -314,26 +314,26 @@ const WishList = () => {
   const handleChooseDelete = (deletionId) => {
     const getPath = window.location.pathname;
     switch (getPath) {
-      case "/wishlist/load":
+      case "/Truck-message-dynamic/wishlist/load":
         const remove_load_details = {
           load_id: JSON.stringify(deletionId.load_id),
         };
 
         hanldeDelete("remove_load_details", remove_load_details);
         break;
-      case "/wishlist/truck":
+      case "/Truck-message-dynamic/wishlist/truck":
         const remove_truck_entry = {
           truck_id: JSON.stringify(deletionId.truck_id),
         };
         hanldeDelete("remove_truck_entry", remove_truck_entry);
         break;
-      case "/wishlist/driver":
+      case "/Truck-message-dynamic/wishlist/driver":
         const remove_driver_entry = {
           driver_id: JSON.stringify(deletionId.driver_id),
         };
         hanldeDelete("remove_driver_entry", remove_driver_entry);
         break;
-      case "/wishlist/buy_sell":
+      case "/Truck-message-dynamic/wishlist/buy_sell":
         const remove_truck_buy_sell = {
           buy_sell_id: JSON.stringify(deletionId.buy_sell_id),
         };
@@ -372,21 +372,21 @@ const WishList = () => {
   const handleSubmitFeedback = async () => {
     try {
       const getPath = window.location.pathname;
-      if (getPath === "/wishlist/load") {
+      if (getPath === "/Truck-message-dynamic/wishlist/load") {
         var data = {
           user_id: window.atob(Cookies.get("usrin")),
           ref_id: JSON.stringify(deletingData.load_id),
           via_app: feedbackRadio,
           ref_name: "load",
         };
-      } else if (getPath === "/wishlist/truck") {
+      } else if (getPath === "/Truck-message-dynamic/wishlist/truck") {
         var data = {
           user_id: window.atob(Cookies.get("usrin")),
           ref_id: JSON.stringify(deletingData.truck_id),
           via_app: feedbackRadio,
           ref_name: "truck",
         };
-      } else if (getPath === "/wishlist/driver") {
+      } else if (getPath === "/Truck-message-dynamic/wishlist/driver") {
         var data = {
           user_id: window.atob(Cookies.get("usrin")),
           ref_id: JSON.stringify(deletingData.driver_id),
@@ -1153,13 +1153,13 @@ const WishList = () => {
   const renderTabContent = () => {
     const getPath = window.location.pathname;
     switch (getPath) {
-      case "/wishlist/load":
+      case "/Truck-message-dynamic/wishlist/load":
         return <div className="row">{renderLoadCard()}</div>;
-      case "/wishlist/truck":
+      case "/Truck-message-dynamic/wishlist/truck":
         return <div className="row">{renderTruckCard()}</div>;
-      case "/wishlist/driver":
+      case "/Truck-message-dynamic/wishlist/driver":
         return <div className="row">{renderDriverCard()}</div>;
-      case "/wishlist/buy_sell":
+      case "/Truck-message-dynamic/wishlist/buy_sell":
         return <div className="row">{renderBuyandSell()}</div>;
       default:
         return null;

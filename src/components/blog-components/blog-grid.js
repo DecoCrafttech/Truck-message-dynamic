@@ -26,15 +26,16 @@ const BlogGrid = () => {
     });
 
     const truckBodyType = ["LCV", "Container", "Open body vehicle", "Tanker", "Trailer", "Tipper"];
-    const numOfTyres = [4,
-        6,
-        10,
-        12,
-        14,
-        16,
-        18,
-        20,
-        22
+    const numOfTyres = [
+        "4",
+        "6",
+        "10",
+        "12",
+        "14",
+        "16",
+        "18",
+        "20",
+        "22"
     ]
 
     const [editingData, setEditingData] = useState({
@@ -71,6 +72,8 @@ const BlogGrid = () => {
     const [userStateList, setUserStateList] = useState([])
     const [selectToLocationMultiple, setSelectToLocationMultiple] = useState([]);
     const [vehicleList, setVehicleList] = useState([]);
+    const [showingFromLocation, setShowingFromLocation] = useState("");
+    const [showingToLocation, setShowingToLocation] = useState(""); 
 
     const getVehicleList = async () => {
         const userId = Cookies.get("usrin") ? window.atob(Cookies.get("usrin")) : '';
@@ -103,6 +106,20 @@ const BlogGrid = () => {
 
 
     const fetchData = async () => {
+        SetfilterModelData({
+            user_id: "",
+            driver_name: "",
+            vehicle_number: "",
+            company_name: "",
+            contact_no: "",
+            from: "",
+            to: "",
+            truck_body_type: "",
+            no_of_tyres: "",
+            description: '',
+            truck_name: ''
+        })
+        setShowingFromLocation("")
         setInitialLoading(true)
         try {
             const response = await axios.get('https://truck.truckmessage.com/all_driver_details');
@@ -271,29 +288,12 @@ const BlogGrid = () => {
     // Handle page change
     const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
-
-
-    const [showingFromLocation, setShowingFromLocation] = useState("");
-    const [showingToLocation, setShowingToLocation] = useState("");
-    const [editCompanyFromLocation, setEditCompanyFromLocation] = useState({
-        city: "",
-        state: "",
-    });
-    const [editCompanyToLocation, setEditCompanyToLocation] = useState({
-        city: "",
-        state: "",
-    });
-
     const handleFromLocation = (selectedLocation) => {
         if (selectedLocation) {
             const cityComponent = selectedLocation.find(component => component.types.includes('locality'));
             const stateComponent = selectedLocation.find(component => component.types.includes('administrative_area_level_1'));
 
-            if (cityComponent && stateComponent) {
-                setEditCompanyFromLocation({
-                    city: cityComponent.long_name,
-                    state: stateComponent.long_name,
-                });
+            if (cityComponent && stateComponent) {             
                 setShowingFromLocation(`${cityComponent.long_name}, ${stateComponent.long_name}`);
             }
         }
@@ -305,10 +305,6 @@ const BlogGrid = () => {
             const stateComponent = selectedLocation.find(component => component.types.includes('administrative_area_level_1'));
 
             if (cityComponent && stateComponent) {
-                setEditCompanyToLocation({
-                    city: cityComponent.long_name,
-                    state: stateComponent.long_name,
-                });
                 setShowingToLocation(`${cityComponent.long_name}, ${stateComponent.long_name}`);
             }
         }
@@ -771,20 +767,7 @@ const BlogGrid = () => {
                                     </div>
 
                                     <div className="col-12 col-md-6">
-                                        <h6>To</h6>
-                                        {/* <div className="input-item input-item-name">
-                                            <Autocomplete name="to_location"
-                                                className="google-location location-input bg-transparent py-2"
-                                                apiKey={process.env.REACT_APP_GOOGLE_PLACES_KEY}
-                                                onPlaceSelected={(place) => {
-                                                    if (place) {
-                                                        handleToLocation(place.address_components);
-                                                    }
-                                                }}
-                                                value={showingToLocation}
-                                                onChange={(e) => setShowingToLocation(e.target.value)}
-                                            />
-                                        </div> */}
+                                        <h6>To</h6> 
                                         <Select multi options={userStateList} className='selectBox-innerWidth' onChange={(e) => setSelectToLocationMultiple(e)} />
                                     </div>
 

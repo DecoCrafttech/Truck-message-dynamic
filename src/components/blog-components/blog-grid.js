@@ -25,7 +25,7 @@ const BlogGrid = () => {
         search: '',
     });
 
-    const truckBodyType = ["LCV", "Container", "Open body vehicle", "Tanker", "Trailer", "Tipper"];
+    const truckBodyType = ["LCV", "Container", "Open body", "Tanker", "Trailer", "Tipper"];
     const numOfTyres = [
         "4",
         "6",

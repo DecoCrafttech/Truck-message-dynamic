@@ -39,7 +39,7 @@ const TruckAvailability = () => {
     const [selectToLocationSingle, setSelectToLocationSingle] = useState("")
     const [selectToLocationMultiple, setSelectToLocationMultiple] = useState([])
 
-    const truckBodyType = ["LCV", "Container", "Open body vehicle", "Tanker", "Trailer", "Tipper"];
+    const truckBodyType = ["LCV", "Container", "Open body", "Tanker", "Trailer", "Tipper"];
     const numOfTyres = [4, 6, 10, 12, 14, 16, 18, 20, 22];
     const [vehicleList, setVehicleList] = useState([]);
 
@@ -589,46 +589,46 @@ const TruckAvailability = () => {
                             </button>
                             <ul class="dropdown-menu  cup shadow-0 col-11 dropdown-ul">
                                 <li onClick={() => setEditingData({
-                                    ...editingData, truck_brand_name: 'ashok_leyland'
-                                })} className="cup mt-0 py-2 dropdown-list-hover"><a class="dropdown-item text-decoration-none">Ashok_leyland</a></li>
+                                    ...editingData, truck_brand_name: 'Ashok Leyland'
+                                })} className="cup mt-0 py-2 dropdown-list-hover"><a class="dropdown-item text-decoration-none">Ashok Leyland</a></li>
                                 <li onClick={() => setEditingData({
-                                    ...editingData, truck_brand_name: 'tata'
+                                    ...editingData, truck_brand_name: 'Tata'
                                 })} className="cup mt-0 py-2 dropdown-list-hover"><a class="dropdown-item text-decoration-none">Tata</a></li>
                                 <li onClick={() => setEditingData({
-                                    ...editingData, truck_brand_name: 'mahindra'
+                                    ...editingData, truck_brand_name: 'Mahindra'
                                 })} className="cup mt-0 py-2 dropdown-list-hover"><a class="dropdown-item text-decoration-none">Mahindra</a></li>
                                 <li onClick={() => setEditingData({
-                                    ...editingData, truck_brand_name: 'eicher'
+                                    ...editingData, truck_brand_name: 'Eicher'
                                 })} className="cup mt-0 py-2 dropdown-list-hover"><a class="dropdown-item text-decoration-none">Eicher</a></li>
                                 <li onClick={() => setEditingData({
-                                    ...editingData, truck_brand_name: 'daimler_india'
-                                })} className="cup mt-0 py-2 dropdown-list-hover"><a class="dropdown-item text-decoration-none">Daimler_india</a></li>
+                                    ...editingData, truck_brand_name: 'Daimler India'
+                                })} className="cup mt-0 py-2 dropdown-list-hover"><a class="dropdown-item text-decoration-none">Daimler India</a></li>
                                 <li onClick={() => setEditingData({
-                                    ...editingData, truck_brand_name: 'bharat_benz'
-                                })} className="cup mt-0 py-2 dropdown-list-hover"><a class="dropdown-item text-decoration-none">Bharat_benz</a></li>
+                                    ...editingData, truck_brand_name: 'Bharat Benz'
+                                })} className="cup mt-0 py-2 dropdown-list-hover"><a class="dropdown-item text-decoration-none">Bharat Benz</a></li>
                                 <li onClick={() => setEditingData({
-                                    ...editingData, truck_brand_name: 'maruthi_suzuki'
-                                })} className="cup mt-0 py-2 dropdown-list-hover"><a class="dropdown-item text-decoration-none">Maruthi_suzuki</a></li>
+                                    ...editingData, truck_brand_name: 'Maruthi Suzuki'
+                                })} className="cup mt-0 py-2 dropdown-list-hover"><a class="dropdown-item text-decoration-none">Maruthi Suzuki</a></li>
                                 <li onClick={() => setEditingData({
-                                    ...editingData, truck_brand_name: 'sml_isuzu'
-                                })} className="cup mt-0 py-2 dropdown-list-hover"><a class="dropdown-item text-decoration-none">Sml_isuzu</a></li >
+                                    ...editingData, truck_brand_name: 'SML Lsuzu'
+                                })} className="cup mt-0 py-2 dropdown-list-hover"><a class="dropdown-item text-decoration-none">SML Lsuzu</a></li >
                                 <li onClick={() => setEditingData({
-                                    ...editingData, truck_brand_name: 'force'
+                                    ...editingData, truck_brand_name: 'Force'
                                 })} className="cup mt-0 py-2 dropdown-list-hover"><a class="dropdown-item text-decoration-none">Force</a></li >
                                 <li onClick={() => setEditingData({
-                                    ...editingData, truck_brand_name: 'amw'
+                                    ...editingData, truck_brand_name: 'AWM'
                                 })} className="cup mt-0 py-2 dropdown-list-hover"><a class="dropdown-item text-decoration-none">Amw</a></li >
                                 <li onClick={() => setEditingData({
-                                    ...editingData, truck_brand_name: 'man'
+                                    ...editingData, truck_brand_name: 'Man'
                                 })} className="cup mt-0 py-2 dropdown-list-hover"><a class="dropdown-item text-decoration-none">Man</a></li >
                                 <li onClick={() => setEditingData({
-                                    ...editingData, truck_brand_name: 'scania'
+                                    ...editingData, truck_brand_name: 'Scania'
                                 })} className="cup mt-0 py-2 dropdown-list-hover"><a class="dropdown-item text-decoration-none">Scania</a></li >
                                 <li onClick={() => setEditingData({
-                                    ...editingData, truck_brand_name: 'volvo'
+                                    ...editingData, truck_brand_name: 'Volvo'
                                 })} className="cup mt-0 py-2 dropdown-list-hover"><a class="dropdown-item text-decoration-none">Volvo</a></li >
                                 <li onClick={() => setEditingData({
-                                    ...editingData, truck_brand_name: 'others'
+                                    ...editingData, truck_brand_name: 'Others'
                                 })} className="cup mt-0 py-2 dropdown-list-hover"><a class="dropdown-item text-decoration-none">Others</a></li >
                             </ul >
                         </div>
@@ -865,46 +865,46 @@ const TruckAvailability = () => {
                                         </button>
                                         <ul class="dropdown-menu  cup shadow-0 col-11 dropdown-ul">
                                             <li onClick={() => SetfilterModelData({
-                                                ...filterModelData, truck_brand_name: 'ashok_leyland'
-                                            })} className="cup mt-0 py-2 dropdown-list-hover"><a class="dropdown-item text-decoration-none">Ashok_leyland</a></li>
+                                                ...filterModelData, truck_brand_name: 'Ashok Leyland'
+                                            })} className="cup mt-0 py-2 dropdown-list-hover"><a class="dropdown-item text-decoration-none">Ashok Leyland</a></li>
                                             <li onClick={() => SetfilterModelData({
-                                                ...filterModelData, truck_brand_name: 'tata'
+                                                ...filterModelData, truck_brand_name: 'Tata'
                                             })} className="cup mt-0 py-2 dropdown-list-hover"><a class="dropdown-item text-decoration-none">Tata</a></li>
                                             <li onClick={() => SetfilterModelData({
-                                                ...filterModelData, truck_brand_name: 'mahindra'
+                                                ...filterModelData, truck_brand_name: 'Mahindra'
                                             })} className="cup mt-0 py-2 dropdown-list-hover"><a class="dropdown-item text-decoration-none">Mahindra</a></li>
                                             <li onClick={() => SetfilterModelData({
-                                                ...filterModelData, truck_brand_name: 'eicher'
+                                                ...filterModelData, truck_brand_name: 'Eicher'
                                             })} className="cup mt-0 py-2 dropdown-list-hover"><a class="dropdown-item text-decoration-none">Eicher</a></li>
                                             <li onClick={() => SetfilterModelData({
-                                                ...filterModelData, truck_brand_name: 'daimler_india'
-                                            })} className="cup mt-0 py-2 dropdown-list-hover"><a class="dropdown-item text-decoration-none">Daimler_india</a></li>
+                                                ...filterModelData, truck_brand_name: 'Daimler India'
+                                            })} className="cup mt-0 py-2 dropdown-list-hover"><a class="dropdown-item text-decoration-none">Daimler India</a></li>
                                             <li onClick={() => SetfilterModelData({
-                                                ...filterModelData, truck_brand_name: 'bharat_benz'
-                                            })} className="cup mt-0 py-2 dropdown-list-hover"><a class="dropdown-item text-decoration-none">Bharat_benz</a></li>
+                                                ...filterModelData, truck_brand_name: 'Bharat Benz'
+                                            })} className="cup mt-0 py-2 dropdown-list-hover"><a class="dropdown-item text-decoration-none">Bharat Benz</a></li>
                                             <li onClick={() => SetfilterModelData({
-                                                ...filterModelData, truck_brand_name: 'maruthi_suzuki'
-                                            })} className="cup mt-0 py-2 dropdown-list-hover"><a class="dropdown-item text-decoration-none">Maruthi_suzuki</a></li>
+                                                ...filterModelData, truck_brand_name: 'Maruthi Suzuki'
+                                            })} className="cup mt-0 py-2 dropdown-list-hover"><a class="dropdown-item text-decoration-none">Maruthi Suzuki</a></li>
                                             <li onClick={() => SetfilterModelData({
-                                                ...filterModelData, truck_brand_name: 'sml_isuzu'
-                                            })} className="cup mt-0 py-2 dropdown-list-hover"><a class="dropdown-item text-decoration-none">Sml_isuzu</a></li >
+                                                ...filterModelData, truck_brand_name: 'SML Lsuzu'
+                                            })} className="cup mt-0 py-2 dropdown-list-hover"><a class="dropdown-item text-decoration-none">SML Lsuzu</a></li >
                                             <li onClick={() => SetfilterModelData({
-                                                ...filterModelData, truck_brand_name: 'force'
+                                                ...filterModelData, truck_brand_name: 'Force'
                                             })} className="cup mt-0 py-2 dropdown-list-hover"><a class="dropdown-item text-decoration-none">Force</a></li >
                                             <li onClick={() => SetfilterModelData({
-                                                ...filterModelData, truck_brand_name: 'amw'
+                                                ...filterModelData, truck_brand_name: 'AWM'
                                             })} className="cup mt-0 py-2 dropdown-list-hover"><a class="dropdown-item text-decoration-none">Amw</a></li >
                                             <li onClick={() => SetfilterModelData({
-                                                ...filterModelData, truck_brand_name: 'man'
+                                                ...filterModelData, truck_brand_name: 'Man'
                                             })} className="cup mt-0 py-2 dropdown-list-hover"><a class="dropdown-item text-decoration-none">Man</a></li >
                                             <li onClick={() => SetfilterModelData({
-                                                ...filterModelData, truck_brand_name: 'scania'
+                                                ...filterModelData, truck_brand_name: 'Scania'
                                             })} className="cup mt-0 py-2 dropdown-list-hover"><a class="dropdown-item text-decoration-none">Scania</a></li >
                                             <li onClick={() => SetfilterModelData({
-                                                ...filterModelData, truck_brand_name: 'volvo'
+                                                ...filterModelData, truck_brand_name: 'Volvo'
                                             })} className="cup mt-0 py-2 dropdown-list-hover"><a class="dropdown-item text-decoration-none">Volvo</a></li >
                                             <li onClick={() => SetfilterModelData({
-                                                ...filterModelData, truck_brand_name: 'others'
+                                                ...filterModelData, truck_brand_name: 'Others'
                                             })} className="cup mt-0 py-2 dropdown-list-hover"><a class="dropdown-item text-decoration-none">Others</a></li >
                                         </ul >
                                     </div>

@@ -17,7 +17,8 @@ const BlogList = () => {
   const LoginDetails = useSelector((state) => state.login);
 
   const [yearData, setYearData] = useState([]);
-  const truckBodyType = ["LCV", "Container", "Open body vehicle", "Tanker", "Trailer", "Tipper", "Bus "];
+  const truckBodyType = ["LCV", "Container", "Open body", "Tanker", "Trailer", "Tipper", "Bus "];
+
   const tonnage = [
     { value: 1, label: '1 Ton - 2.5 Ton' },
     { value: 2, label: '2.5 Ton - 5 Ton' },

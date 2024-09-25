@@ -24,7 +24,7 @@ const PortfolioV1 = () => {
     const [showingToLocation, setShowingToLocation] = useState("");
 
     const [cardsPerPage] = useState(21); // Adjust the number of cards per page as needed
-    const truckBodyType = ["LCV", "Open body vehicle", "Tanker", "Trailer", "Tipper", "Container"];
+    const truckBodyType = ["LCV", "Open body", "Tanker", "Trailer", "Tipper", "Container"];
     const numOfTyres = [4, 6, 10, 12, 14, 16, 18, 20, 22];
     const [initialLoading, setInitialLoading] = useState(false);
     const [submitLoadLoading, setSubmitLoadLoading] = useState(false);

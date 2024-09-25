@@ -20,8 +20,8 @@ const WishList = () => {
   const pageRender = useNavigate();
   const [data, setData] = useState([]);
   const [gettingDetails, setGettingDetails] = useState(false);
-  const [feedbackRating, setRating] = useState('');
-  const [feedbackHover, setHover] = useState('');
+  const [feedbackRating, setRating] = useState("");
+  const [feedbackHover, setHover] = useState("");
   const [yearData, setYearData] = useState([]);
   const truckBrand = [
     "Ashok Leyland",
@@ -38,18 +38,16 @@ const WishList = () => {
     "Scania",
     "Volvo",
     "Others",
-  ]
-  const truckBodyType = ["LCV", "Bus", "Open body", "Tanker", "Trailer", "Tipper"];
-  const numOfTyres = [
-    "4",
-    "6",
-    "10",
-    "12",
-    "14",
-    "16",
-    "18",
-    "20",
-    "22"]
+  ];
+  const truckBodyType = [
+    "LCV",
+    "Bus",
+    "Open body",
+    "Tanker",
+    "Trailer",
+    "Tipper",
+  ];
+  const numOfTyres = ["4", "6", "10", "12", "14", "16", "18", "20", "22"];
 
   const [contactError, setContactError] = useState("");
   const [editingData, setEditingData] = useState({
@@ -60,7 +58,7 @@ const WishList = () => {
     no_of_tyres: "",
     tone: "",
     truck_body_type: "",
-    tonnage: ""
+    tonnage: "",
   });
   const [driverDetailsEditingData, setDriverDetailsEditingData] = useState({
     driver_name: "",
@@ -69,20 +67,20 @@ const WishList = () => {
     contact_no: "",
     truck_body_type: "",
     no_of_tyres: "",
-    description: ''
+    description: "",
   });
   const [showingFromLocation, setShowingFromLocation] = useState("");
   const [showingToLocation, setShowingToLocation] = useState("");
-  const [showingBuyAndSellLocation, setShowingBuyAndSellLocation] = useState("");
+  const [showingBuyAndSellLocation, setShowingBuyAndSellLocation] =
+    useState("");
   const [deletingData, setDeletingData] = useState({});
   const [feedbackRadio, setFeedbackRadio] = useState("YES");
   const [deleteButtonLoading, setDeleteButtonLoading] = useState(false);
-  const [updateButtonLoading, setupdateButtonLoading] = useState(false)
+  const [updateButtonLoading, setupdateButtonLoading] = useState(false);
   const [feedback, setfeedback] = useState({
     feedbackCnt: "",
     mobNum: "",
   });
-
 
   useEffect(() => {
     if (!Cookies.get("usrin")) {
@@ -91,16 +89,16 @@ const WishList = () => {
   }, [LoginDetails.isLoggedIn]);
 
   useEffect(() => {
-    const getYear = new Date().getFullYear()
-    var l = []
+    const getYear = new Date().getFullYear();
+    var l = [];
     for (var i = 1980; i <= getYear; i++) {
-      l[l.length] = i
+      l[l.length] = i;
     }
-    setYearData(l)
-  }, [])
+    setYearData(l);
+  }, []);
 
   useEffect(() => {
-    initialRenderOne()
+    initialRenderOne();
   }, []);
 
   const initialRenderOne = () => {
@@ -121,7 +119,7 @@ const WishList = () => {
       default:
         break;
     }
-  }
+  };
 
   const handleFromLocation = (selectedLocation) => {
     if (selectedLocation) {
@@ -190,12 +188,15 @@ const WishList = () => {
           })
           .then((response) => {
             if (response.data.success && Array.isArray(response.data.data)) {
-              if (window.location.pathname === "/Truck-message-dynamic/wishlist/buy_sell") {
+              if (
+                window.location.pathname ===
+                "/Truck-message-dynamic/wishlist/buy_sell"
+              ) {
                 const tonnageEdited = response.data.data.map((v) => {
-                  const tonnageNumber = v.tonnage.split(" ")[0]
-                  return { ...v, tonnage: tonnageNumber }
-                })
-                setData(tonnageEdited)
+                  const tonnageNumber = v.tonnage.split(" ")[0];
+                  return { ...v, tonnage: tonnageNumber };
+                });
+                setData(tonnageEdited);
               } else {
                 setData(response.data.data);
               }
@@ -253,7 +254,7 @@ const WishList = () => {
           no_of_tyres: driverDetailsEditingData.no_of_tyres,
           description: driverDetailsEditingData.description,
           from: showingFromLocation,
-          truck_name: '',
+          truck_name: "",
           to: showingToLocation,
           driver_id: JSON.stringify(editingData.driver_id),
           user_id: userId,
@@ -269,7 +270,7 @@ const WishList = () => {
           buy_sell_id: JSON.stringify(editingData.buy_sell_id),
           user_id: userId,
         };
-        console.log(truck_buy_sell)
+        console.log(truck_buy_sell);
         handleUpdate("truck_buy_sell", truck_buy_sell);
         break;
       default:
@@ -278,7 +279,7 @@ const WishList = () => {
   };
 
   const closeModal = () => {
-    initialRenderOne()
+    initialRenderOne();
     const getPath = window.location.pathname;
     switch (getPath) {
       case "/Truck-message-dynamic/wishlist/load":
@@ -295,7 +296,7 @@ const WishList = () => {
   };
 
   const handleUpdate = async (updationPath, updationData) => {
-    setupdateButtonLoading(true)
+    setupdateButtonLoading(true);
     try {
       const res = await axios.post(
         `https://truck.truckmessage.com/${updationPath}`,
@@ -309,14 +310,14 @@ const WishList = () => {
 
       if (res.data.error_code === 0) {
         // initialRenderOne()
-        setupdateButtonLoading(false)
+        setupdateButtonLoading(false);
         closeModal();
       } else {
-        setupdateButtonLoading(false)
+        setupdateButtonLoading(false);
         toast.error(res.data.message);
       }
     } catch (error) {
-      setupdateButtonLoading(false)
+      setupdateButtonLoading(false);
       console.log("There was an error!", error);
     }
   };
@@ -355,7 +356,7 @@ const WishList = () => {
   };
 
   const hanldeDelete = async (deletionPath, deletionData) => {
-    setDeleteButtonLoading(true)
+    setDeleteButtonLoading(true);
     try {
       const res = await axios.post(
         `https://truck.truckmessage.com/${deletionPath}`,
@@ -367,15 +368,15 @@ const WishList = () => {
         }
       );
       if (res.data.error_code === 0) {
-        initialRenderOne()
-        setDeleteButtonLoading(false)
+        initialRenderOne();
+        setDeleteButtonLoading(false);
         document.getElementById("deleteCloseModel").click();
       } else {
-        setDeleteButtonLoading(false)
+        setDeleteButtonLoading(false);
         toast.error(res.data.message);
       }
     } catch (error) {
-      setDeleteButtonLoading(false)
+      setDeleteButtonLoading(false);
       toast.error("Failed to delete.");
     }
   };
@@ -462,7 +463,7 @@ const WishList = () => {
   };
 
   const handleEdit = (editObject) => {
-    console.log(editObject)
+    console.log(editObject);
 
     if (editObject.from_location) {
       setShowingFromLocation(editObject.from_location);
@@ -486,8 +487,7 @@ const WishList = () => {
     //     })
     // }
 
-
-    setDriverDetailsEditingData(editObject)
+    setDriverDetailsEditingData(editObject);
   };
 
   //Image upload and delete functions
@@ -575,7 +575,6 @@ const WishList = () => {
     formData.append("no_of_tyres", edit.no_of_tyres);
     formData.append("tonnage", edit.tonnage);
 
-
     if (multipleImages.length > 0) {
       for (let i = 0; i < multipleImages.length; i++) {
         formData.append(`truck_image${i + 1}`, multipleImages[i]);
@@ -587,7 +586,7 @@ const WishList = () => {
     }
 
     try {
-      setupdateButtonLoading(true)
+      setupdateButtonLoading(true);
       const res = await axios.post(
         "https://truck.truckmessage.com/truck_buy_sell",
         formData,
@@ -600,14 +599,14 @@ const WishList = () => {
 
       if (res.data.error_code === 0) {
         document.getElementById("clodeBuySellModel").click();
-        setupdateButtonLoading(false)
+        setupdateButtonLoading(false);
         initialRender("user_buy_sell_details");
       } else {
-        setupdateButtonLoading(false)
+        setupdateButtonLoading(false);
         toast.error(res.data.message);
       }
     } catch (err) {
-      setupdateButtonLoading(false)
+      setupdateButtonLoading(false);
       console.log(err);
     }
   };
@@ -709,7 +708,7 @@ const WishList = () => {
                           feedbackCnt: "",
                           mobNum: "",
                         });
-                        setFeedbackRadio("YES")
+                        setFeedbackRadio("YES");
                       }}
                     >
                       Delete
@@ -734,8 +733,7 @@ const WishList = () => {
           </div>
         </div>
       )
-    )
-      :
+    ) : (
       <div className="row w-100 justify-content-center align-items-center spinner-miin-height">
         <div className="col-3 text-center">
           <div class="spinner-border text-info" role="status">
@@ -743,7 +741,8 @@ const WishList = () => {
           </div>
           <p className="mt-2 text-info">Loading...</p>
         </div>
-      </div>;
+      </div>
+    );
   };
 
   const renderTruckCard = () => {
@@ -815,7 +814,9 @@ const WishList = () => {
                 <div className="row px-2">
                   <div className="col-6">
                     <h5 className="card-title mt-3">Truck name</h5>
-                    <p className="card-text paragraph">{item.truck_brand_name}</p>
+                    <p className="card-text paragraph">
+                      {item.truck_brand_name}
+                    </p>
                   </div>
                   <div className="col-6">
                     <h5 className="card-title mt-3">vehicle number</h5>
@@ -850,9 +851,9 @@ const WishList = () => {
                           feedbackCnt: "",
                           mobNum: "",
                         });
-                        setRating(0)
-                        setHover(0)
-                        setFeedbackRadio("YES")
+                        setRating(0);
+                        setHover(0);
+                        setFeedbackRadio("YES");
                       }}
                     >
                       Delete
@@ -877,8 +878,7 @@ const WishList = () => {
           </div>
         </div>
       )
-    )
-      :
+    ) : (
       <div className="row w-100 justify-content-center align-items-center spinner-miin-height">
         <div className="col-3 text-center">
           <div class="spinner-border text-info" role="status">
@@ -886,7 +886,8 @@ const WishList = () => {
           </div>
           <p className="mt-2 text-info">Loading...</p>
         </div>
-      </div>;
+      </div>
+    );
   };
 
   const renderDriverCard = () => {
@@ -981,9 +982,9 @@ const WishList = () => {
                           feedbackCnt: "",
                           mobNum: "",
                         });
-                        setRating(0)
-                        setHover(0)
-                        setFeedbackRadio("YES")
+                        setRating(0);
+                        setHover(0);
+                        setFeedbackRadio("YES");
                       }}
                     >
                       Delete
@@ -1008,8 +1009,7 @@ const WishList = () => {
           </div>
         </div>
       )
-    )
-      :
+    ) : (
       <div className="row w-100 justify-content-center align-items-center spinner-miin-height">
         <div className="col-3 text-center">
           <div class="spinner-border text-info" role="status">
@@ -1017,7 +1017,8 @@ const WishList = () => {
           </div>
           <p className="mt-2 text-info">Loading...</p>
         </div>
-      </div>;
+      </div>
+    );
   };
 
   const renderBuyandSell = () => {
@@ -1128,9 +1129,9 @@ const WishList = () => {
                               feedbackCnt: "",
                               mobNum: "",
                             });
-                            setRating(0)
-                            setHover(0)
-                            setFeedbackRadio("YES")
+                            setRating(0);
+                            setHover(0);
+                            setFeedbackRadio("YES");
                           }}
                         >
                           Delete
@@ -1154,8 +1155,7 @@ const WishList = () => {
                 </div>
               </div>
             )
-          )
-            :
+          ) : (
             <div className="row w-100 justify-content-center align-items-center spinner-miin-height">
               <div className="col-3 text-center">
                 <div class="spinner-border text-info" role="status">
@@ -1163,7 +1163,8 @@ const WishList = () => {
                 </div>
                 <p className="mt-2 text-info">Loading...</p>
               </div>
-            </div>}
+            </div>
+          )}
         </div>
       </div>
     );
@@ -1183,7 +1184,7 @@ const WishList = () => {
       default:
         return null;
     }
-  }
+  };
 
   const getWhishlistData = (tabEndpoint) => {
     setData([]);
@@ -1198,13 +1199,16 @@ const WishList = () => {
           .post(`https://truck.truckmessage.com/${tabEndpoint}`, data)
           .then((response) => {
             if (response.data.success && Array.isArray(response.data.data)) {
-              if (window.location.pathname === "/Truck-message-dynamic/wishlist/buy_sell") {
+              if (
+                window.location.pathname ===
+                "/Truck-message-dynamic/wishlist/buy_sell"
+              ) {
                 const tonnageEdited = response.data.data.map((v) => {
-                  const tonnageNumber = v.tonnage.split(" ")[0]
-                  console.log(v.tonnage)
-                  return { ...v, tonnage: tonnageNumber }
-                })
-                setData(tonnageEdited)
+                  const tonnageNumber = v.tonnage.split(" ")[0];
+                  console.log(v.tonnage);
+                  return { ...v, tonnage: tonnageNumber };
+                });
+                setData(tonnageEdited);
               } else {
                 setData(response.data.data);
               }
@@ -1411,33 +1415,177 @@ const WishList = () => {
                   <div className="col-12 col-md-6">
                     <h6>Truck Body Type</h6>
 
-                    <button type="button" class="btn btn-transparent dropdown-toggle col-12 py-3 dropdown-arrow shadow-none border rounded text-start p-3" data-bs-toggle="dropdown" aria-expanded="false">
-                      {editingData.truck_body_type === '' ? 'select truck body type' : `${editingData.truck_body_type} `}
+                    <button
+                      type="button"
+                      class="btn btn-transparent dropdown-toggle col-12 py-3 dropdown-arrow shadow-none border rounded text-start p-3"
+                      data-bs-toggle="dropdown"
+                      aria-expanded="false"
+                    >
+                      {editingData.truck_body_type === ""
+                        ? "select truck body type"
+                        : `${editingData.truck_body_type} `}
                     </button>
                     <ul class="dropdown-menu  cup shadow-0 col-11 dropdown-ul">
-                      <li onClick={() => setEditingData({ ...editingData, truck_body_type: 'open_body' })} className="cup mt-0 py-2 dropdown-list-hover"><a class="dropdown-item text-decoration-none">open_body</a></li>
-                      <li onClick={() => setEditingData({ ...editingData, truck_body_type: 'Container' })} className="cup mt-0 py-2 dropdown-list-hover"><a class="dropdown-item text-decoration-none">Container</a></li>
-                      <li onClick={() => setEditingData({ ...editingData, truck_body_type: 'trailer' })} className="cup mt-0 py-2 dropdown-list-hover"><a class="dropdown-item text-decoration-none">trailer</a></li>
-                      <li onClick={() => setEditingData({ ...editingData, truck_body_type: 'tanker' })} className="cup mt-0 py-2 dropdown-list-hover"><a class="dropdown-item text-decoration-none">tanker</a></li>
+                      <li
+                        onClick={() =>
+                          setEditingData({
+                            ...editingData,
+                            truck_body_type: "Open body",
+                          })
+                        }
+                        className="cup mt-0 py-2 dropdown-list-hover"
+                      >
+                        <a class="dropdown-item text-decoration-none">
+                          Open body
+                        </a>
+                      </li>
+                      <li
+                        onClick={() =>
+                          setEditingData({
+                            ...editingData,
+                            truck_body_type: "Container",
+                          })
+                        }
+                        className="cup mt-0 py-2 dropdown-list-hover"
+                      >
+                        <a class="dropdown-item text-decoration-none">
+                          Container
+                        </a>
+                      </li>
+                      <li
+                        onClick={() =>
+                          setEditingData({
+                            ...editingData,
+                            truck_body_type: "LCV",
+                          })
+                        }
+                        className="cup mt-0 py-2 dropdown-list-hover"
+                      >
+                        <a class="dropdown-item text-decoration-none">LCV</a>
+                      </li>
+                      <li
+                        onClick={() =>
+                          setEditingData({
+                            ...editingData,
+                            truck_body_type: "Tanker",
+                          })
+                        }
+                        className="cup mt-0 py-2 dropdown-list-hover"
+                      >
+                        <a class="dropdown-item text-decoration-none">Tanker</a>
+                      </li>
+                      <li
+                        onClick={() =>
+                          setEditingData({
+                            ...editingData,
+                            truck_body_type: "Trailer",
+                          })
+                        }
+                        className="cup mt-0 py-2 dropdown-list-hover"
+                      >
+                        <a class="dropdown-item text-decoration-none">
+                          Trailer
+                        </a>
+                      </li>
+                      <li
+                        onClick={() =>
+                          setEditingData({
+                            ...editingData,
+                            truck_body_type: "Tanker",
+                          })
+                        }
+                        className="cup mt-0 py-2 dropdown-list-hover"
+                      >
+                        <a class="dropdown-item text-decoration-none">Tanker</a>
+                      </li>
                     </ul>
                   </div>
 
                   <div className="col-12 col-md-6 p-0 m-0">
                     <h6>No. of Tyres</h6>
-                    <button type="button" class="btn btn-transparent dropdown-toggle col-12 py-3 dropdown-arrow shadow-none border rounded text-start p-3" data-bs-toggle="dropdown" aria-expanded="false">
-                      {editingData.no_of_tyres === '' ? 'select no of tyres' : `${editingData.no_of_tyres} `}
+                    <button
+                      type="button"
+                      class="btn btn-transparent dropdown-toggle col-12 py-3 dropdown-arrow shadow-none border rounded text-start p-3"
+                      data-bs-toggle="dropdown"
+                      aria-expanded="false"
+                    >
+                      {editingData.no_of_tyres === ""
+                        ? "select no of tyres"
+                        : `${editingData.no_of_tyres} `}
                     </button>
                     <ul class="dropdown-menu  cup shadow-0 col-11 dropdown-ul">
-                      <li onClick={() => setEditingData({ ...editingData, no_of_tyres: 4 })} className="cup mt-0 py-2 dropdown-list-hover"><a class="dropdown-item text-decoration-none">4</a></li>
-                      <li onClick={() => setEditingData({ ...editingData, no_of_tyres: 6 })} className="cup mt-0 py-2 dropdown-list-hover"><a class="dropdown-item text-decoration-none">6</a></li>
-                      <li onClick={() => setEditingData({ ...editingData, no_of_tyres: 10 })} className="cup mt-0 py-2 dropdown-list-hover"><a class="dropdown-item text-decoration-none">10</a></li>
-                      <li onClick={() => setEditingData({ ...editingData, no_of_tyres: 12 })} className="cup mt-0 py-2 dropdown-list-hover"><a class="dropdown-item text-decoration-none">12</a></li>
-                      <li onClick={() => setEditingData({ ...editingData, no_of_tyres: 14 })} className="cup mt-0 py-2 dropdown-list-hover"><a class="dropdown-item text-decoration-none">14</a></li>
-                      <li onClick={() => setEditingData({ ...editingData, no_of_tyres: 16 })} className="cup mt-0 py-2 dropdown-list-hover"><a class="dropdown-item text-decoration-none">16</a></li>
-                      <li onClick={() => setEditingData({ ...editingData, no_of_tyres: 18 })} className="cup mt-0 py-2 dropdown-list-hover"><a class="dropdown-item text-decoration-none">18</a></li>
-                      <li onClick={() => setEditingData({ ...editingData, no_of_tyres: 20 })} className="cup mt-0 py-2 dropdown-list-hover"><a class="dropdown-item text-decoration-none">20</a></li>
-                      <li onClick={() => setEditingData({ ...editingData, no_of_tyres: 22 })} className="cup mt-0 py-2 dropdown-list-hover"><a class="dropdown-item text-decoration-none">22</a></li>
-
+                      <li
+                        onClick={() =>
+                          setEditingData({ ...editingData, no_of_tyres: 4 })
+                        }
+                        className="cup mt-0 py-2 dropdown-list-hover"
+                      >
+                        <a class="dropdown-item text-decoration-none">4</a>
+                      </li>
+                      <li
+                        onClick={() =>
+                          setEditingData({ ...editingData, no_of_tyres: 6 })
+                        }
+                        className="cup mt-0 py-2 dropdown-list-hover"
+                      >
+                        <a class="dropdown-item text-decoration-none">6</a>
+                      </li>
+                      <li
+                        onClick={() =>
+                          setEditingData({ ...editingData, no_of_tyres: 10 })
+                        }
+                        className="cup mt-0 py-2 dropdown-list-hover"
+                      >
+                        <a class="dropdown-item text-decoration-none">10</a>
+                      </li>
+                      <li
+                        onClick={() =>
+                          setEditingData({ ...editingData, no_of_tyres: 12 })
+                        }
+                        className="cup mt-0 py-2 dropdown-list-hover"
+                      >
+                        <a class="dropdown-item text-decoration-none">12</a>
+                      </li>
+                      <li
+                        onClick={() =>
+                          setEditingData({ ...editingData, no_of_tyres: 14 })
+                        }
+                        className="cup mt-0 py-2 dropdown-list-hover"
+                      >
+                        <a class="dropdown-item text-decoration-none">14</a>
+                      </li>
+                      <li
+                        onClick={() =>
+                          setEditingData({ ...editingData, no_of_tyres: 16 })
+                        }
+                        className="cup mt-0 py-2 dropdown-list-hover"
+                      >
+                        <a class="dropdown-item text-decoration-none">16</a>
+                      </li>
+                      <li
+                        onClick={() =>
+                          setEditingData({ ...editingData, no_of_tyres: 18 })
+                        }
+                        className="cup mt-0 py-2 dropdown-list-hover"
+                      >
+                        <a class="dropdown-item text-decoration-none">18</a>
+                      </li>
+                      <li
+                        onClick={() =>
+                          setEditingData({ ...editingData, no_of_tyres: 20 })
+                        }
+                        className="cup mt-0 py-2 dropdown-list-hover"
+                      >
+                        <a class="dropdown-item text-decoration-none">20</a>
+                      </li>
+                      <li
+                        onClick={() =>
+                          setEditingData({ ...editingData, no_of_tyres: 22 })
+                        }
+                        className="cup mt-0 py-2 dropdown-list-hover"
+                      >
+                        <a class="dropdown-item text-decoration-none">22</a>
+                      </li>
                     </ul>
                   </div>
                   <div className="col-12 mt-3">
@@ -1467,22 +1615,24 @@ const WishList = () => {
               >
                 Close
               </button>
-              {
-                updateButtonLoading ?
-                  <button type="button" className="btn btn-primary col-12 col-md-3">
-                    <div class="spinner-border" role="status">
-                      <span class="visually-hidden">Updating...</span>
-                    </div>
-                  </button>
-                  :
-                  <button
-                    type="button"
-                    className="btn btn-primary col-12 col-md-3"
-                    onClick={handleChooseUpdate}
-                  >
-                    Save changes
-                  </button>
-              }
+              {updateButtonLoading ? (
+                <button
+                  type="button"
+                  className="btn btn-primary col-12 col-md-3"
+                >
+                  <div class="spinner-border" role="status">
+                    <span class="visually-hidden">Updating...</span>
+                  </div>
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  className="btn btn-primary col-12 col-md-3"
+                  onClick={handleChooseUpdate}
+                >
+                  Save changes
+                </button>
+              )}
             </div>
           </div>
         </div>
@@ -1500,7 +1650,8 @@ const WishList = () => {
           <div className="modal-content">
             <div className="modal-header">
               <h1 className="modal-title fs-5" id="exampleModalLabel">
-                Edit Truck              </h1>
+                Edit Truck{" "}
+              </h1>
               <button
                 type="button"
                 className="btn-close"
@@ -1513,7 +1664,6 @@ const WishList = () => {
             <div className="modal-body">
               <div className="ltn__appointment-inner">
                 <div className="row">
-
                   <div className="col-12 col-md-6">
                     <h6>Vehicle Number</h6>
                     <div className="input-item input-item-email">
@@ -1577,7 +1727,10 @@ const WishList = () => {
                   <div className="col-12 col-md-6">
                     <h6>Name of the transport</h6>
                     <div className="input-item input-item-name ">
-                      <input type="text" name="name_of_the_transport" placeholder="Enter name of the transport"
+                      <input
+                        type="text"
+                        name="name_of_the_transport"
+                        placeholder="Enter name of the transport"
                         value={editingData.name_of_the_transport}
                         onChange={(e) =>
                           setEditingData({
@@ -1585,14 +1738,18 @@ const WishList = () => {
                             name_of_the_transport: e.target.value,
                           })
                         }
-                        required />
+                        required
+                      />
                     </div>
                   </div>
 
                   <div className="col-12 col-md-6">
                     <h6>Ton</h6>
                     <div className="input-item input-item-name ">
-                      <input type="number" name="tone" placeholder="Example: 2 tons"
+                      <input
+                        type="number"
+                        name="tone"
+                        placeholder="Example: 2 tons"
                         value={editingData.tone}
                         onChange={(e) =>
                           setEditingData({
@@ -1600,31 +1757,191 @@ const WishList = () => {
                             tone: e.target.value,
                           })
                         }
-                        required />
+                        required
+                      />
                     </div>
                   </div>
 
                   <div className="col-12 col-md-6">
                     <h6>Truck name</h6>
-                    <button type="button" class="btn btn-transparent dropdown-toggle col-12 py-3 dropdown-arrow shadow-none border rounded text-start p-3" data-bs-toggle="dropdown" aria-expanded="false">
-                      {editingData.truck_brand_name === '' ? 'select truck' : `${editingData.truck_brand_name} `}
+                    <button
+                      type="button"
+                      class="btn btn-transparent dropdown-toggle col-12 py-3 dropdown-arrow shadow-none border rounded text-start p-3"
+                      data-bs-toggle="dropdown"
+                      aria-expanded="false"
+                    >
+                      {editingData.truck_brand_name === ""
+                        ? "select truck"
+                        : `${editingData.truck_brand_name} `}
                     </button>
                     <ul class="dropdown-menu  cup shadow-0 col-11 dropdown-ul">
-                      <li onClick={() => setEditingData({ ...editingData, truck_brand_name: 'Ashok Leyland' })} className="cup mt-0 py-2 dropdown-list-hover"><a class="dropdown-item text-decoration-none">Ashok Leyland</a></li>
-                      <li onClick={() => setEditingData({ ...editingData, truck_brand_name: 'Tata' })} className="cup mt-0 py-2 dropdown-list-hover"><a class="dropdown-item text-decoration-none">Tata</a></li>
-                      <li onClick={() => setEditingData({ ...editingData, truck_brand_name: 'Mahindra' })} className="cup mt-0 py-2 dropdown-list-hover"><a class="dropdown-item text-decoration-none">Mahindra</a></li>
-                      <li onClick={() => setEditingData({ ...editingData, truck_brand_name: 'Eicher' })} className="cup mt-0 py-2 dropdown-list-hover"><a class="dropdown-item text-decoration-none">Eicher</a></li>
-                      <li onClick={() => setEditingData({ ...editingData, truck_brand_name: 'Daimler India' })} className="cup mt-0 py-2 dropdown-list-hover"><a class="dropdown-item text-decoration-none">Daimler India</a></li>
-                      <li onClick={() => setEditingData({ ...editingData, truck_brand_name: 'Bharat Benz' })} className="cup mt-0 py-2 dropdown-list-hover"><a class="dropdown-item text-decoration-none">Bharat Benz</a></li>
-                      <li onClick={() => setEditingData({ ...editingData, truck_brand_name: 'Maruthi Suzuki' })} className="cup mt-0 py-2 dropdown-list-hover"><a class="dropdown-item text-decoration-none">Maruthi Suzuki</a></li>
-                      <li onClick={() => setEditingData({ ...editingData, truck_brand_name: 'SML Lsuzu' })} className="cup mt-0 py-2 dropdown-list-hover"><a class="dropdown-item text-decoration-none">SML Lsuzu</a></li >
-                      <li onClick={() => setEditingData({ ...editingData, truck_brand_name: 'Force' })} className="cup mt-0 py-2 dropdown-list-hover"><a class="dropdown-item text-decoration-none">Force</a></li >
-                      <li onClick={() => setEditingData({ ...editingData, truck_brand_name: 'AWM' })} className="cup mt-0 py-2 dropdown-list-hover"><a class="dropdown-item text-decoration-none">Amw</a></li >
-                      <li onClick={() => setEditingData({ ...editingData, truck_brand_name: 'Man' })} className="cup mt-0 py-2 dropdown-list-hover"><a class="dropdown-item text-decoration-none">Man</a></li >
-                      <li onClick={() => setEditingData({ ...editingData, truck_brand_name: 'Scania' })} className="cup mt-0 py-2 dropdown-list-hover"><a class="dropdown-item text-decoration-none">Scania</a></li >
-                      <li onClick={() => setEditingData({ ...editingData, truck_brand_name: 'Volvo' })} className="cup mt-0 py-2 dropdown-list-hover"><a class="dropdown-item text-decoration-none">Volvo</a></li >
-                      <li onClick={() => setEditingData({ ...editingData, truck_brand_name: 'Others' })} className="cup mt-0 py-2 dropdown-list-hover"><a class="dropdown-item text-decoration-none">Others</a></li >
-                    </ul >
+                      <li
+                        onClick={() =>
+                          setEditingData({
+                            ...editingData,
+                            truck_brand_name: "Ashok Leyland",
+                          })
+                        }
+                        className="cup mt-0 py-2 dropdown-list-hover"
+                      >
+                        <a class="dropdown-item text-decoration-none">
+                          Ashok Leyland
+                        </a>
+                      </li>
+                      <li
+                        onClick={() =>
+                          setEditingData({
+                            ...editingData,
+                            truck_brand_name: "Tata",
+                          })
+                        }
+                        className="cup mt-0 py-2 dropdown-list-hover"
+                      >
+                        <a class="dropdown-item text-decoration-none">Tata</a>
+                      </li>
+                      <li
+                        onClick={() =>
+                          setEditingData({
+                            ...editingData,
+                            truck_brand_name: "Mahindra",
+                          })
+                        }
+                        className="cup mt-0 py-2 dropdown-list-hover"
+                      >
+                        <a class="dropdown-item text-decoration-none">
+                          Mahindra
+                        </a>
+                      </li>
+                      <li
+                        onClick={() =>
+                          setEditingData({
+                            ...editingData,
+                            truck_brand_name: "Eicher",
+                          })
+                        }
+                        className="cup mt-0 py-2 dropdown-list-hover"
+                      >
+                        <a class="dropdown-item text-decoration-none">Eicher</a>
+                      </li>
+                      <li
+                        onClick={() =>
+                          setEditingData({
+                            ...editingData,
+                            truck_brand_name: "Daimler India",
+                          })
+                        }
+                        className="cup mt-0 py-2 dropdown-list-hover"
+                      >
+                        <a class="dropdown-item text-decoration-none">
+                          Daimler India
+                        </a>
+                      </li>
+                      <li
+                        onClick={() =>
+                          setEditingData({
+                            ...editingData,
+                            truck_brand_name: "Bharat Benz",
+                          })
+                        }
+                        className="cup mt-0 py-2 dropdown-list-hover"
+                      >
+                        <a class="dropdown-item text-decoration-none">
+                          Bharat Benz
+                        </a>
+                      </li>
+                      <li
+                        onClick={() =>
+                          setEditingData({
+                            ...editingData,
+                            truck_brand_name: "Maruthi Suzuki",
+                          })
+                        }
+                        className="cup mt-0 py-2 dropdown-list-hover"
+                      >
+                        <a class="dropdown-item text-decoration-none">
+                          Maruthi Suzuki
+                        </a>
+                      </li>
+                      <li
+                        onClick={() =>
+                          setEditingData({
+                            ...editingData,
+                            truck_brand_name: "SML Lsuzu",
+                          })
+                        }
+                        className="cup mt-0 py-2 dropdown-list-hover"
+                      >
+                        <a class="dropdown-item text-decoration-none">
+                          SML Lsuzu
+                        </a>
+                      </li>
+                      <li
+                        onClick={() =>
+                          setEditingData({
+                            ...editingData,
+                            truck_brand_name: "Force",
+                          })
+                        }
+                        className="cup mt-0 py-2 dropdown-list-hover"
+                      >
+                        <a class="dropdown-item text-decoration-none">Force</a>
+                      </li>
+                      <li
+                        onClick={() =>
+                          setEditingData({
+                            ...editingData,
+                            truck_brand_name: "AWM",
+                          })
+                        }
+                        className="cup mt-0 py-2 dropdown-list-hover"
+                      >
+                        <a class="dropdown-item text-decoration-none">Amw</a>
+                      </li>
+                      <li
+                        onClick={() =>
+                          setEditingData({
+                            ...editingData,
+                            truck_brand_name: "Man",
+                          })
+                        }
+                        className="cup mt-0 py-2 dropdown-list-hover"
+                      >
+                        <a class="dropdown-item text-decoration-none">Man</a>
+                      </li>
+                      <li
+                        onClick={() =>
+                          setEditingData({
+                            ...editingData,
+                            truck_brand_name: "Scania",
+                          })
+                        }
+                        className="cup mt-0 py-2 dropdown-list-hover"
+                      >
+                        <a class="dropdown-item text-decoration-none">Scania</a>
+                      </li>
+                      <li
+                        onClick={() =>
+                          setEditingData({
+                            ...editingData,
+                            truck_brand_name: "Volvo",
+                          })
+                        }
+                        className="cup mt-0 py-2 dropdown-list-hover"
+                      >
+                        <a class="dropdown-item text-decoration-none">Volvo</a>
+                      </li>
+                      <li
+                        onClick={() =>
+                          setEditingData({
+                            ...editingData,
+                            truck_brand_name: "Others",
+                          })
+                        }
+                        className="cup mt-0 py-2 dropdown-list-hover"
+                      >
+                        <a class="dropdown-item text-decoration-none">Others</a>
+                      </li>
+                    </ul>
                   </div>
 
                   <div className="col-12 col-md-6">
@@ -1668,35 +1985,177 @@ const WishList = () => {
                   <div className="col-12 col-md-6">
                     <h6>Truck Body Type</h6>
 
-                    <button type="button" class="btn btn-transparent dropdown-toggle col-12 py-3 dropdown-arrow shadow-none border rounded text-start p-3" data-bs-toggle="dropdown" aria-expanded="false">
-                      {editingData.truck_body_type === '' ? 'select truck body type' : `${editingData.truck_body_type} `}
+                    <button
+                      type="button"
+                      class="btn btn-transparent dropdown-toggle col-12 py-3 dropdown-arrow shadow-none border rounded text-start p-3"
+                      data-bs-toggle="dropdown"
+                      aria-expanded="false"
+                    >
+                      {editingData.truck_body_type === ""
+                        ? "select truck body type"
+                        : `${editingData.truck_body_type} `}
                     </button>
                     <ul class="dropdown-menu  cup shadow-0 col-11 dropdown-ul">
-                      <li onClick={() => setEditingData({ ...editingData, truck_body_type: 'open_body' })} className="cup mt-0 py-2 dropdown-list-hover"><a class="dropdown-item text-decoration-none">open_body</a></li>
-                      <li onClick={() => setEditingData({ ...editingData, truck_body_type: 'Container' })} className="cup mt-0 py-2 dropdown-list-hover"><a class="dropdown-item text-decoration-none">Container</a></li>
-                      <li onClick={() => setEditingData({ ...editingData, truck_body_type: 'lcv' })} className="cup mt-0 py-2 dropdown-list-hover"><a class="dropdown-item text-decoration-none">lcv</a></li>
-                      <li onClick={() => setEditingData({ ...editingData, truck_body_type: 'tipper' })} className="cup mt-0 py-2 dropdown-list-hover"><a class="dropdown-item text-decoration-none">tipper</a></li>
-                      <li onClick={() => setEditingData({ ...editingData, truck_body_type: 'trailer' })} className="cup mt-0 py-2 dropdown-list-hover"><a class="dropdown-item text-decoration-none">trailer</a></li>
-                      <li onClick={() => setEditingData({ ...editingData, truck_body_type: 'tanker' })} className="cup mt-0 py-2 dropdown-list-hover"><a class="dropdown-item text-decoration-none">tanker</a></li>
+                      <li
+                        onClick={() =>
+                          setEditingData({
+                            ...editingData,
+                            truck_body_type: "Open body",
+                          })
+                        }
+                        className="cup mt-0 py-2 dropdown-list-hover"
+                      >
+                        <a class="dropdown-item text-decoration-none">
+                          Open body
+                        </a>
+                      </li>
+                      <li
+                        onClick={() =>
+                          setEditingData({
+                            ...editingData,
+                            truck_body_type: "Container",
+                          })
+                        }
+                        className="cup mt-0 py-2 dropdown-list-hover"
+                      >
+                        <a class="dropdown-item text-decoration-none">
+                          Container
+                        </a>
+                      </li>
+                      <li
+                        onClick={() =>
+                          setEditingData({
+                            ...editingData,
+                            truck_body_type: "LCV",
+                          })
+                        }
+                        className="cup mt-0 py-2 dropdown-list-hover"
+                      >
+                        <a class="dropdown-item text-decoration-none">LCV</a>
+                      </li>
+                      <li
+                        onClick={() =>
+                          setEditingData({
+                            ...editingData,
+                            truck_body_type: "Tanker",
+                          })
+                        }
+                        className="cup mt-0 py-2 dropdown-list-hover"
+                      >
+                        <a class="dropdown-item text-decoration-none">Tanker</a>
+                      </li>
+                      <li
+                        onClick={() =>
+                          setEditingData({
+                            ...editingData,
+                            truck_body_type: "Trailer",
+                          })
+                        }
+                        className="cup mt-0 py-2 dropdown-list-hover"
+                      >
+                        <a class="dropdown-item text-decoration-none">
+                          Trailer
+                        </a>
+                      </li>
+                      <li
+                        onClick={() =>
+                          setEditingData({
+                            ...editingData,
+                            truck_body_type: "Tanker",
+                          })
+                        }
+                        className="cup mt-0 py-2 dropdown-list-hover"
+                      >
+                        <a class="dropdown-item text-decoration-none">Tanker</a>
+                      </li>
                     </ul>
                   </div>
 
                   <div className="col-12 col-md-6 p-0 m-0">
                     <h6>No. of Tyres</h6>
-                    <button type="button" class="btn btn-transparent dropdown-toggle col-12 py-3 dropdown-arrow shadow-none border rounded text-start p-3" data-bs-toggle="dropdown" aria-expanded="false">
-                      {editingData.no_of_tyres === '' ? 'select no of tyres' : `${editingData.no_of_tyres} `}
+                    <button
+                      type="button"
+                      class="btn btn-transparent dropdown-toggle col-12 py-3 dropdown-arrow shadow-none border rounded text-start p-3"
+                      data-bs-toggle="dropdown"
+                      aria-expanded="false"
+                    >
+                      {editingData.no_of_tyres === ""
+                        ? "select no of tyres"
+                        : `${editingData.no_of_tyres} `}
                     </button>
                     <ul class="dropdown-menu  cup shadow-0 col-11 dropdown-ul">
-                      <li onClick={() => setEditingData({ ...editingData, no_of_tyres: 4 })} className="cup mt-0 py-2 dropdown-list-hover"><a class="dropdown-item text-decoration-none">4</a></li>
-                      <li onClick={() => setEditingData({ ...editingData, no_of_tyres: 6 })} className="cup mt-0 py-2 dropdown-list-hover"><a class="dropdown-item text-decoration-none">6</a></li>
-                      <li onClick={() => setEditingData({ ...editingData, no_of_tyres: 10 })} className="cup mt-0 py-2 dropdown-list-hover"><a class="dropdown-item text-decoration-none">10</a></li>
-                      <li onClick={() => setEditingData({ ...editingData, no_of_tyres: 12 })} className="cup mt-0 py-2 dropdown-list-hover"><a class="dropdown-item text-decoration-none">12</a></li>
-                      <li onClick={() => setEditingData({ ...editingData, no_of_tyres: 14 })} className="cup mt-0 py-2 dropdown-list-hover"><a class="dropdown-item text-decoration-none">14</a></li>
-                      <li onClick={() => setEditingData({ ...editingData, no_of_tyres: 16 })} className="cup mt-0 py-2 dropdown-list-hover"><a class="dropdown-item text-decoration-none">16</a></li>
-                      <li onClick={() => setEditingData({ ...editingData, no_of_tyres: 18 })} className="cup mt-0 py-2 dropdown-list-hover"><a class="dropdown-item text-decoration-none">18</a></li>
-                      <li onClick={() => setEditingData({ ...editingData, no_of_tyres: 20 })} className="cup mt-0 py-2 dropdown-list-hover"><a class="dropdown-item text-decoration-none">20</a></li>
-                      <li onClick={() => setEditingData({ ...editingData, no_of_tyres: 22 })} className="cup mt-0 py-2 dropdown-list-hover"><a class="dropdown-item text-decoration-none">22</a></li>
-
+                      <li
+                        onClick={() =>
+                          setEditingData({ ...editingData, no_of_tyres: 4 })
+                        }
+                        className="cup mt-0 py-2 dropdown-list-hover"
+                      >
+                        <a class="dropdown-item text-decoration-none">4</a>
+                      </li>
+                      <li
+                        onClick={() =>
+                          setEditingData({ ...editingData, no_of_tyres: 6 })
+                        }
+                        className="cup mt-0 py-2 dropdown-list-hover"
+                      >
+                        <a class="dropdown-item text-decoration-none">6</a>
+                      </li>
+                      <li
+                        onClick={() =>
+                          setEditingData({ ...editingData, no_of_tyres: 10 })
+                        }
+                        className="cup mt-0 py-2 dropdown-list-hover"
+                      >
+                        <a class="dropdown-item text-decoration-none">10</a>
+                      </li>
+                      <li
+                        onClick={() =>
+                          setEditingData({ ...editingData, no_of_tyres: 12 })
+                        }
+                        className="cup mt-0 py-2 dropdown-list-hover"
+                      >
+                        <a class="dropdown-item text-decoration-none">12</a>
+                      </li>
+                      <li
+                        onClick={() =>
+                          setEditingData({ ...editingData, no_of_tyres: 14 })
+                        }
+                        className="cup mt-0 py-2 dropdown-list-hover"
+                      >
+                        <a class="dropdown-item text-decoration-none">14</a>
+                      </li>
+                      <li
+                        onClick={() =>
+                          setEditingData({ ...editingData, no_of_tyres: 16 })
+                        }
+                        className="cup mt-0 py-2 dropdown-list-hover"
+                      >
+                        <a class="dropdown-item text-decoration-none">16</a>
+                      </li>
+                      <li
+                        onClick={() =>
+                          setEditingData({ ...editingData, no_of_tyres: 18 })
+                        }
+                        className="cup mt-0 py-2 dropdown-list-hover"
+                      >
+                        <a class="dropdown-item text-decoration-none">18</a>
+                      </li>
+                      <li
+                        onClick={() =>
+                          setEditingData({ ...editingData, no_of_tyres: 20 })
+                        }
+                        className="cup mt-0 py-2 dropdown-list-hover"
+                      >
+                        <a class="dropdown-item text-decoration-none">20</a>
+                      </li>
+                      <li
+                        onClick={() =>
+                          setEditingData({ ...editingData, no_of_tyres: 22 })
+                        }
+                        className="cup mt-0 py-2 dropdown-list-hover"
+                      >
+                        <a class="dropdown-item text-decoration-none">22</a>
+                      </li>
                     </ul>
                   </div>
 
@@ -1728,22 +2187,24 @@ const WishList = () => {
               >
                 Close
               </button>
-              {
-                updateButtonLoading ?
-                  <button type="button" className="btn btn-primary col-12 col-md-3">
-                    <div class="spinner-border" role="status">
-                      <span class="visually-hidden">Updating...</span>
-                    </div>
-                  </button>
-                  :
-                  <button
-                    type="button"
-                    className="btn btn-primary col-12 col-md-3"
-                    onClick={handleChooseUpdate}
-                  >
-                    Save changes
-                  </button>
-              }
+              {updateButtonLoading ? (
+                <button
+                  type="button"
+                  className="btn btn-primary col-12 col-md-3"
+                >
+                  <div class="spinner-border" role="status">
+                    <span class="visually-hidden">Updating...</span>
+                  </div>
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  className="btn btn-primary col-12 col-md-3"
+                  onClick={handleChooseUpdate}
+                >
+                  Save changes
+                </button>
+              )}
             </div>
           </div>
         </div>
@@ -1860,7 +2321,8 @@ const WishList = () => {
                   <div className="col-12 col-md-6">
                     <h6>From</h6>
                     <div className="input-item input-item-name">
-                      <Autocomplete name="from_location"
+                      <Autocomplete
+                        name="from_location"
                         className="google-location location-input bg-transparent py-2"
                         apiKey={process.env.REACT_APP_GOOGLE_PLACES_KEY}
                         onPlaceSelected={(place) => {
@@ -1877,7 +2339,8 @@ const WishList = () => {
                   <div className="col-12 col-md-6">
                     <h6>To</h6>
                     <div className="input-item input-item-name">
-                      <Autocomplete name="to_location"
+                      <Autocomplete
+                        name="to_location"
                         className="google-location location-input bg-transparent py-2"
                         apiKey={process.env.REACT_APP_GOOGLE_PLACES_KEY}
                         onPlaceSelected={(place) => {
@@ -1893,47 +2356,95 @@ const WishList = () => {
 
                   <div className="col-12 col-md-6 m-0">
                     <h6>Truck Body Type</h6>
-                    <button type="button" class="btn btn-transparent shadow-none border dropdown-toggle col-12 py-3 dropdown-arrow text-start" data-bs-toggle="dropdown" aria-expanded="false">
-                      {driverDetailsEditingData.truck_body_type === '' ? 'select body type' : `${driverDetailsEditingData.truck_body_type}`}
+                    <button
+                      type="button"
+                      class="btn btn-transparent shadow-none border dropdown-toggle col-12 py-3 dropdown-arrow text-start"
+                      data-bs-toggle="dropdown"
+                      aria-expanded="false"
+                    >
+                      {driverDetailsEditingData.truck_body_type === ""
+                        ? "select body type"
+                        : `${driverDetailsEditingData.truck_body_type}`}
                     </button>
                     <ul class="dropdown-menu col-11 dropdown-ul">
-                      {
-                        truckBodyType.map((bodyType) => {
-                          return <li onClick={() => setDriverDetailsEditingData({
-                            ...driverDetailsEditingData, truck_body_type: bodyType,
-                          })} className="cup mt-0 py-2 dropdown-list-hover"><a class="dropdown-item text-decoration-none">{bodyType}</a></li>
-                        })
-                      }
-                    </ul >
+                      {truckBodyType.map((bodyType) => {
+                        return (
+                          <li
+                            onClick={() =>
+                              setDriverDetailsEditingData({
+                                ...driverDetailsEditingData,
+                                truck_body_type: bodyType,
+                              })
+                            }
+                            className="cup mt-0 py-2 dropdown-list-hover"
+                          >
+                            <a class="dropdown-item text-decoration-none">
+                              {bodyType}
+                            </a>
+                          </li>
+                        );
+                      })}
+                    </ul>
                   </div>
 
                   <div className="col-12 col-md-6 m-0">
                     <h6>No. of Tyres</h6>
-                    <button type="button" class="btn btn-transparent shadow-none border dropdown-toggle col-12 py-3 dropdown-arrow text-start" data-bs-toggle="dropdown" aria-expanded="false">
-                      {driverDetailsEditingData.no_of_tyres === '' ? 'select number of tyres' : `${driverDetailsEditingData.no_of_tyres}`}
+                    <button
+                      type="button"
+                      class="btn btn-transparent shadow-none border dropdown-toggle col-12 py-3 dropdown-arrow text-start"
+                      data-bs-toggle="dropdown"
+                      aria-expanded="false"
+                    >
+                      {driverDetailsEditingData.no_of_tyres === ""
+                        ? "select number of tyres"
+                        : `${driverDetailsEditingData.no_of_tyres}`}
                     </button>
                     <ul class="dropdown-menu col-11 dropdown-ul">
-                      {
-                        numOfTyres.map((numOfTyres) => {
-                          return <li onClick={() => setDriverDetailsEditingData({
-                            ...driverDetailsEditingData, no_of_tyres: numOfTyres,
-                          })} className="cup mt-0 py-2 dropdown-list-hover"><a class="dropdown-item text-decoration-none">{numOfTyres}</a></li>
-                        })
-                      }
-                    </ul >
+                      {numOfTyres.map((numOfTyres) => {
+                        return (
+                          <li
+                            onClick={() =>
+                              setDriverDetailsEditingData({
+                                ...driverDetailsEditingData,
+                                no_of_tyres: numOfTyres,
+                              })
+                            }
+                            className="cup mt-0 py-2 dropdown-list-hover"
+                          >
+                            <a class="dropdown-item text-decoration-none">
+                              {numOfTyres}
+                            </a>
+                          </li>
+                        );
+                      })}
+                    </ul>
                   </div>
 
                   <div className="col-12 col-md-12">
                     <h6>Descriptions </h6>
                     <div className="input-item input-item-textarea ltn__custom-icon">
-                      <textarea name="description" placeholder="Enter a text here" value={driverDetailsEditingData.description} onChange={(e) => setDriverDetailsEditingData({
-                        ...driverDetailsEditingData, description: e.target.value
-                      })} />
+                      <textarea
+                        name="description"
+                        placeholder="Enter a text here"
+                        value={driverDetailsEditingData.description}
+                        onChange={(e) =>
+                          setDriverDetailsEditingData({
+                            ...driverDetailsEditingData,
+                            description: e.target.value,
+                          })
+                        }
+                      />
                     </div>
                   </div>
                 </div>
                 <div className="modal-footer btn-wrapper text-center mt-4">
-                  <button className="btn btn-primary text-uppercase" type="button" onClick={handleChooseUpdate}>Submit</button>
+                  <button
+                    className="btn btn-primary text-uppercase"
+                    type="button"
+                    onClick={handleChooseUpdate}
+                  >
+                    Submit
+                  </button>
                 </div>
               </div>
             </div>
@@ -1945,22 +2456,24 @@ const WishList = () => {
               >
                 Close
               </button>
-              {
-                updateButtonLoading ?
-                  <button type="button" className="btn btn-primary col-12 col-md-3">
-                    <div class="spinner-border" role="status">
-                      <span class="visually-hidden">Updating...</span>
-                    </div>
-                  </button>
-                  :
-                  <button
-                    type="button"
-                    className="btn btn-primary col-12 col-md-3"
-                    onClick={handleChooseUpdate}
-                  >
-                    Save changes
-                  </button>
-              }
+              {updateButtonLoading ? (
+                <button
+                  type="button"
+                  className="btn btn-primary col-12 col-md-3"
+                >
+                  <div class="spinner-border" role="status">
+                    <span class="visually-hidden">Updating...</span>
+                  </div>
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  className="btn btn-primary col-12 col-md-3"
+                  onClick={handleChooseUpdate}
+                >
+                  Save changes
+                </button>
+              )}
             </div>
           </div>
         </div>
@@ -1991,37 +2504,70 @@ const WishList = () => {
             <div className="modal-body">
               <div className="ltn__appointment-inner">
                 <div className="row gy-4">
-
                   <div className="col-12 col-md-6">
                     <h6>Model Year</h6>
-                    <button type="button" class="btn btn-transparent shadow-none border dropdown-toggle col-12 py-3 dropdown-arrow text-start" data-bs-toggle="dropdown" aria-expanded="false">
-                      {editingData.model === '' ? 'select model' : `${editingData.model}`}
+                    <button
+                      type="button"
+                      class="btn btn-transparent shadow-none border dropdown-toggle col-12 py-3 dropdown-arrow text-start"
+                      data-bs-toggle="dropdown"
+                      aria-expanded="false"
+                    >
+                      {editingData.model === ""
+                        ? "select model"
+                        : `${editingData.model}`}
                     </button>
                     <ul class="dropdown-menu col-11 dropdown-ul">
-                      {
-                        yearData.map((yearVal) => {
-                          return <li onClick={() => setEditingData({
-                            ...editingData, model: yearVal,
-                          })} className="cup mt-0 py-2 dropdown-list-hover"><a class="dropdown-item text-decoration-none">{yearVal}</a></li>
-                        })
-                      }
-                    </ul >
+                      {yearData.map((yearVal) => {
+                        return (
+                          <li
+                            onClick={() =>
+                              setEditingData({
+                                ...editingData,
+                                model: yearVal,
+                              })
+                            }
+                            className="cup mt-0 py-2 dropdown-list-hover"
+                          >
+                            <a class="dropdown-item text-decoration-none">
+                              {yearVal}
+                            </a>
+                          </li>
+                        );
+                      })}
+                    </ul>
                   </div>
 
                   <div className="col-12 col-md-6">
                     <h6>Brand</h6>
-                    <button type="button" class="btn btn-transparent shadow-none border dropdown-toggle col-12 py-3 dropdown-arrow text-start" data-bs-toggle="dropdown" aria-expanded="false">
-                      {editingData.brand === '' ? 'select model' : `${editingData.brand}`}
+                    <button
+                      type="button"
+                      class="btn btn-transparent shadow-none border dropdown-toggle col-12 py-3 dropdown-arrow text-start"
+                      data-bs-toggle="dropdown"
+                      aria-expanded="false"
+                    >
+                      {editingData.brand === ""
+                        ? "select model"
+                        : `${editingData.brand}`}
                     </button>
                     <ul class="dropdown-menu col-11 dropdown-ul">
-                      {
-                        truckBrand.map((brandVal) => {
-                          return <li onClick={() => setEditingData({
-                            ...editingData, brand: brandVal,
-                          })} className="cup mt-0 py-2 dropdown-list-hover"><a class="dropdown-item text-decoration-none">{brandVal}</a></li>
-                        })
-                      }
-                    </ul >
+                      {truckBrand.map((brandVal) => {
+                        return (
+                          <li
+                            onClick={() =>
+                              setEditingData({
+                                ...editingData,
+                                brand: brandVal,
+                              })
+                            }
+                            className="cup mt-0 py-2 dropdown-list-hover"
+                          >
+                            <a class="dropdown-item text-decoration-none">
+                              {brandVal}
+                            </a>
+                          </li>
+                        );
+                      })}
+                    </ul>
                   </div>
 
                   <div className="col-12 col-md-6">
@@ -2161,7 +2707,7 @@ const WishList = () => {
                         onChange={(e) =>
                           setEditingData({
                             ...editingData,
-                            tonnage: e.target.value
+                            tonnage: e.target.value,
                           })
                         }
                         required
@@ -2171,34 +2717,68 @@ const WishList = () => {
 
                   <div className="col-12 col-md-6">
                     <h6>Truck Body Type</h6>
-                    <button type="button" class="btn btn-transparent shadow-none border dropdown-toggle col-12 py-3 dropdown-arrow text-start" data-bs-toggle="dropdown" aria-expanded="false">
-                      {editingData.truck_body_type === '' ? 'select body type' : `${editingData.truck_body_type}`}
+                    <button
+                      type="button"
+                      class="btn btn-transparent shadow-none border dropdown-toggle col-12 py-3 dropdown-arrow text-start"
+                      data-bs-toggle="dropdown"
+                      aria-expanded="false"
+                    >
+                      {editingData.truck_body_type === ""
+                        ? "select body type"
+                        : `${editingData.truck_body_type}`}
                     </button>
                     <ul class="dropdown-menu col-11 dropdown-ul">
-                      {
-                        truckBodyType.map((bodyType) => {
-                          return <li onClick={() => setEditingData({
-                            ...editingData, truck_body_type: bodyType,
-                          })} className="cup mt-0 py-2 dropdown-list-hover"><a class="dropdown-item text-decoration-none">{bodyType}</a></li>
-                        })
-                      }
-                    </ul >
+                      {truckBodyType.map((bodyType) => {
+                        return (
+                          <li
+                            onClick={() =>
+                              setEditingData({
+                                ...editingData,
+                                truck_body_type: bodyType,
+                              })
+                            }
+                            className="cup mt-0 py-2 dropdown-list-hover"
+                          >
+                            <a class="dropdown-item text-decoration-none">
+                              {bodyType}
+                            </a>
+                          </li>
+                        );
+                      })}
+                    </ul>
                   </div>
 
                   <div className="col-12 col-md-6 ">
                     <h6>No. of Tyres</h6>
-                    <button type="button" class="btn btn-transparent shadow-none border dropdown-toggle col-12 py-3 dropdown-arrow text-start" data-bs-toggle="dropdown" aria-expanded="false">
-                      {editingData.no_of_tyres === '' ? 'select number of tyres' : `${editingData.no_of_tyres}`}
+                    <button
+                      type="button"
+                      class="btn btn-transparent shadow-none border dropdown-toggle col-12 py-3 dropdown-arrow text-start"
+                      data-bs-toggle="dropdown"
+                      aria-expanded="false"
+                    >
+                      {editingData.no_of_tyres === ""
+                        ? "select number of tyres"
+                        : `${editingData.no_of_tyres}`}
                     </button>
                     <ul class="dropdown-menu col-11 dropdown-ul">
-                      {
-                        numOfTyres.map((numOfTyres) => {
-                          return <li onClick={() => setEditingData({
-                            ...editingData, no_of_tyres: numOfTyres,
-                          })} className="cup mt-0 py-2 dropdown-list-hover"><a class="dropdown-item text-decoration-none">{numOfTyres}</a></li>
-                        })
-                      }
-                    </ul >
+                      {numOfTyres.map((numOfTyres) => {
+                        return (
+                          <li
+                            onClick={() =>
+                              setEditingData({
+                                ...editingData,
+                                no_of_tyres: numOfTyres,
+                              })
+                            }
+                            className="cup mt-0 py-2 dropdown-list-hover"
+                          >
+                            <a class="dropdown-item text-decoration-none">
+                              {numOfTyres}
+                            </a>
+                          </li>
+                        );
+                      })}
+                    </ul>
                   </div>
                 </div>
 
@@ -2291,22 +2871,24 @@ const WishList = () => {
                   >
                     Close
                   </button>
-                  {
-                    updateButtonLoading ?
-                      <button type="button" className="btn btn-primary col-12 col-md-3">
-                        <div class="spinner-border" role="status">
-                          <span class="visually-hidden">Updating...</span>
-                        </div>
-                      </button>
-                      :
-                      <button
-                        type="button"
-                        className="btn btn-primary col-12 col-md-3"
-                        onClick={handleBuyAndSellUpdate}
-                      >
-                        Save changes
-                      </button>
-                  }
+                  {updateButtonLoading ? (
+                    <button
+                      type="button"
+                      className="btn btn-primary col-12 col-md-3"
+                    >
+                      <div class="spinner-border" role="status">
+                        <span class="visually-hidden">Updating...</span>
+                      </div>
+                    </button>
+                  ) : (
+                    <button
+                      type="button"
+                      className="btn btn-primary col-12 col-md-3"
+                      onClick={handleBuyAndSellUpdate}
+                    >
+                      Save changes
+                    </button>
+                  )}
                 </div>
               </div>
             </div>
@@ -2427,26 +3009,33 @@ const WishList = () => {
                           const ratingsValue = i + 1;
                           return (
                             <label className="ratingLabel">
-                              <input type="radio" name="rating" className="ratingInput" value={ratingsValue} onClick={() => setRating(ratingsValue)} />
+                              <input
+                                type="radio"
+                                name="rating"
+                                className="ratingInput"
+                                value={ratingsValue}
+                                onClick={() => setRating(ratingsValue)}
+                              />
                               <FaStar
                                 className="star"
-                                color={ratingsValue <= (feedbackHover || feedbackRating) ? "#ffc107" : "#e4e5e9"}
+                                color={
+                                  ratingsValue <=
+                                  (feedbackHover || feedbackRating)
+                                    ? "#ffc107"
+                                    : "#e4e5e9"
+                                }
                                 size={25}
                                 onMouseEnter={() => setHover(ratingsValue)}
                                 onMouseLeave={() => setHover(0)}
                               />
                             </label>
-                          )
-                        })
-                        }
-
+                          );
+                        })}
                       </div>
                     </div>
                   </>
                 )}
               </div>
-
-
             </div>
             <div className="modal-footer">
               <button
@@ -2456,27 +3045,29 @@ const WishList = () => {
               >
                 Close
               </button>
-              {
-                deleteButtonLoading ?
-                  <button type="button" className="btn btn-primary col-12 col-md-3">
-                    <div class="spinner-border" role="status">
-                      <span class="visually-hidden">Deleting...</span>
-                    </div>
-                  </button>
-                  :
-                  <button
-                    type="button"
-                    className="btn btn-primary col-12 col-md-3"
-                    onClick={handleSubmitFeedback}
-                  >
-                    Submit
-                  </button>
-              }
+              {deleteButtonLoading ? (
+                <button
+                  type="button"
+                  className="btn btn-primary col-12 col-md-3"
+                >
+                  <div class="spinner-border" role="status">
+                    <span class="visually-hidden">Deleting...</span>
+                  </div>
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  className="btn btn-primary col-12 col-md-3"
+                  onClick={handleSubmitFeedback}
+                >
+                  Submit
+                </button>
+              )}
             </div>
           </div>
         </div>
       </div>
-    </div >
+    </div>
   );
 };
 

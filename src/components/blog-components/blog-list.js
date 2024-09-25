@@ -1523,8 +1523,11 @@ const BlogList = () => {
                                     </p>
                                   </p>
                                   <h5 className="card-title mt-2 text-wrap">
-                                    {card.brand}
+                                    {card.profile_name}
                                   </h5>
+                                  <h4 className="card-title mt-2 text-wrap">
+                                    {card.brand}
+                                  </h4>
                                 </div>
                               </div>
                             </div>

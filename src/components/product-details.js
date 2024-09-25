@@ -264,6 +264,10 @@ const Product_Details = () => {
 								<th>Truck Body Type</th>
 								<td>{data.truck_body_type}</td>
 							</tr>
+                            <tr>
+								<th>Location</th>
+								<td>{data.location}</td>
+							</tr>
 							<tr>
 								<th>Last Updated</th>
 								<td>{data.updt ? data.updt.slice(5, 25): ''}</td>

@@ -1,21 +1,16 @@
 import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
-import { useLocation } from "react-router-dom";
-import { LuRefreshCcw } from "react-icons/lu";
+import { useLocation, useSearchParams } from "react-router-dom";
 import Cookies from "js-cookie";
-import { CiLight } from "react-icons/ci";
-
-function useQuery() {
-  return new URLSearchParams(useLocation().search);
-}
 
 const ChatView = () => {
-  const query = useQuery();
+  const [searchParams] = useSearchParams();
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
-  const [selectedConversation, setSelectedConversation] = useState(null);
-  const [userId, setUserId] = useState(Cookies.get("usrin")); // Set your user_id
-  const [personId, setPersonId] = useState(query?.get("person_id")); // Will be set based on selected conversation
+
+  const userId = Cookies.get("usrin"); // Set your user_id
+  const [personId, setPersonId] = useState(''); // Will be set based on selected conversation
+
   const [userList, setUserList] = useState([]);
   const chatWindowRef = useRef(null); // To reference the chat window
 
@@ -29,46 +24,10 @@ const ChatView = () => {
       );
 
       if (response.data.error_code === 0) {
-
-        const filterUser = response.data.data.filter((v) => {
-          return v.person_id != window.atob(userId)
-        })
-
-        const sortByData = filterUser.sort(function (a, b) {
-          return new Date(b.last_time) - new Date(a.last_time);
-        })
-
-        const findUser = response.data.data.filter((findUSer) => {
-          return findUSer.person_id == personId;
-        });
-
-        if (findUser.length === 0) {
-          if (personId) {
-            const getUserProfileResponse = await axios.post('https://truck.truckmessage.com/get_user_profile', {
-              user_id: personId
-            })
-
-            if (getUserProfileResponse.data.data.length > 0) {
-              const userProfileNotInList = {
-                last_msg: '',
-                last_time: '',
-                person_id: parseInt(getUserProfileResponse.data.data[1].user_id),
-                profile_image_name: getUserProfileResponse.data.data[1].profile_image_name,
-                profile_name: getUserProfileResponse.data.data[1].name
-              }
-
-              const addUserInList = [userProfileNotInList, ...sortByData]
-              setUserList(addUserInList);
-            }
-            setPersonId(personId);
-            fetchChatMessages(personId);
-          } else {
-            setUserList(sortByData);
-          }
-        } else {
-          setUserList(sortByData);
-          setPersonId(personId);
-          fetchChatMessages(personId);
+        setUserList(response.data.data);
+        if (response.data.data.length) {
+          fetchChatMessages(response.data.data[0].person_id);
+          setPersonId(response.data.data[0].person_id);
         }
       }
     } catch (err) {
@@ -79,18 +38,14 @@ const ChatView = () => {
   const fetchChatMessages = async (personIdProps) => {
     try {
       const response = await axios.post(
-        "https://truck.truckmessage.com/get_user_chat_message_list",
-        {
-          user_id: window.atob(userId),
-          person_id: personIdProps,
-        }
-      );
+        "https://truck.truckmessage.com/get_user_chat_message_list", {
+        user_id: window.atob(userId),
+        person_id: personIdProps,
+      });
 
       if (response.data.error_code === 0) {
         // Reverse the messages to display the most recent at the bottom
         setMessages(response.data.data.reverse());
-      } else {
-        console.error("Error fetching messages:", response.data.message);
       }
     } catch (error) {
       console.error("Error fetching messages:", error);
@@ -120,6 +75,8 @@ const ChatView = () => {
               updt: new Date().toUTCString(),
             },
           ]);
+
+          getUserList()
           setNewMessage("");
         } else {
           console.error("Error sending message:", response.data.message);
@@ -132,14 +89,9 @@ const ChatView = () => {
 
   // Function to handle selecting a conversation
   const handleSelectConversation = (conversation, personId) => {
-    setSelectedConversation(conversation);
     setPersonId(personId);
     fetchChatMessages(personId);
   };
-
-  // const handleRefresh = () => {
-  //   getUserList(); // Refresh the contact list
-  // };
 
   useEffect(() => {
     getUserList();
@@ -177,8 +129,8 @@ const ChatView = () => {
                     className="rounded-circle img1"
                     alt="User"
                   />
-                  <div className="ms-3 test-start">
-                    <div className="fw-bold text-start">
+                  <div className="ms-3 text-start">
+                    <div className="fw-bold">
                       {users.profile_name}
                     </div>
                     <div className="text-muted">

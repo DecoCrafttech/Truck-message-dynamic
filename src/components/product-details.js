@@ -4,10 +4,12 @@ import Cookies from 'js-cookie';
 import axios from 'axios';
 import toast from 'react-hot-toast';
 import Slider from 'react-slick';
+import { BsFilePerson } from 'react-icons/bs';
+import { HiOutlineOfficeBuilding } from 'react-icons/hi';
 
 const Product_Details = () => {
     const navigate = useNavigate();
-
+    const [sendModalMessageData, setSendModalMessageData] = useState({})
     const [Images, setImages] = useState([]);
     const [currentImage, setCurrentImage] = useState("")
     const [isOpen, setIsOpen] = useState(false);
@@ -19,7 +21,7 @@ const Product_Details = () => {
 
     const [data, setData] = useState({
         brand: "",
-        price:"",
+        price: "",
         buy_sell_id: "",
         contact_no: "",
         description: "",
@@ -89,7 +91,7 @@ const Product_Details = () => {
                 if (res.data.error_code === 0) {
                     if (res.data.data.length > 0) {
                         setData(...res.data.data);
-                        setImages(res.data.data[0].images) 
+                        setImages(res.data.data[0].images)
                     }
                 } else {
                     toast.error(res.data.message);
@@ -102,7 +104,6 @@ const Product_Details = () => {
         }
     };
 
-
     useEffect(() => {
         fetchDetails()
     }, []);
@@ -111,12 +112,6 @@ const Product_Details = () => {
         setCurrentImage(Images[index])
         setIsOpen(true)
     }
-
-    const handleMessageClick = (card) => {
-        console.log(card, "card")
-        navigate(`/chat?person_id=${card.user_id}`);
-    };
-
 
     const handleCopy = (contactNo) => {
         setSelectedContactNum(null)
@@ -128,6 +123,27 @@ const Product_Details = () => {
             setSelectedContactNumLoading(false)
         }, 800)
     };
+
+    const handleMessageClick = async () => {
+        const userId = Cookies.get("usrin");
+        try {
+            const response = await axios.post(
+                "https://truck.truckmessage.com/get_user_chat_message_list", {
+                user_id: window.atob(userId),
+                person_id: sendModalMessageData.user_id,
+                ref_flag: 'Buy and sell',
+                ref_id: sendModalMessageData.buy_sell_id
+            });
+
+            if (response.data.error_code === 0) {
+                document.getElementById('clodesendMessageModal').click();
+                navigate(`/chat`);
+            }
+        } catch (error) {
+            console.error("Error fetching messages:", error);
+        }
+    };
+
 
     return <div className="ltn__shop-details-area pb-10">
         <div className="container">
@@ -179,8 +195,8 @@ const Product_Details = () => {
                                     <div className="ltn__blog-meta">
                                         <ul className="list-inline">
                                             <li className="list-inline-item ltn__blog-date mt-3">
-                                                <i className="far fa-calendar-alt" /> {data.updt ? data.updt.slice(5, 25): ''}
-                                            </li> 
+                                                <i className="far fa-calendar-alt" /> {data.updt ? data.updt.slice(5, 25) : ''}
+                                            </li>
                                         </ul>
                                         <label className='mt-3 d-block'>
                                             {/* <span className="ltn__secondary-color"><i className="flaticon-pin" /></span> {data} */}
@@ -216,7 +232,8 @@ const Product_Details = () => {
                                                         </button>
                                             }
                                         </div>
-                                        <button type="button" className="btn btn-danger p-2 " onClick={() => handleMessageClick(data)}>Message</button>
+                                        <button className="btn cardbutton w-100" type="button" data-bs-toggle="modal" data-bs-target="#sendMessageModal" onClick={() => setSendModalMessageData(data)}>Message</button>
+
                                     </div>
                                 </div>
                             </div>
@@ -226,55 +243,55 @@ const Product_Details = () => {
                 </div>
 
                 <div className="clearfix mb-30">
-					<table className="table table-bordered">
-						<tbody>
-							<tr>
-								<th>Brand</th>
-								<td>{data.brand}</td>
-							</tr>
-							<tr>
-								<th>Owner Name</th>
-								<td>{data.owner_name}</td>
-							</tr>
-							<tr>
-								<th>Model</th>
-								<td>{data.model}</td>
-							</tr>
-							<tr>
-								<th>Vehicle Number</th>
-								<td>{data.vehicle_number}</td>
-							</tr>
-							<tr>
-								<th>KMs Driven</th>
-								<td>{data.kms_driven}</td>
-							</tr>
-							<tr>
-								<th>Price</th>
-								<td>₹ {data.price}</td>
-							</tr>
-							<tr>
-								<th>No. of Tyres</th>
-								<td>{data.no_of_tyres}</td>
-							</tr>
-							<tr>
-								<th>Tonnage</th>
-								<td>{data.tonnage}</td>
-							</tr>
-							<tr>
-								<th>Truck Body Type</th>
-								<td>{data.truck_body_type}</td>
-							</tr>
+                    <table className="table table-bordered">
+                        <tbody>
                             <tr>
-								<th>Location</th>
-								<td>{data.location}</td>
-							</tr>
-							<tr>
-								<th>Last Updated</th>
-								<td>{data.updt ? data.updt.slice(5, 25): ''}</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
+                                <th>Brand</th>
+                                <td>{data.brand}</td>
+                            </tr>
+                            <tr>
+                                <th>Owner Name</th>
+                                <td>{data.owner_name}</td>
+                            </tr>
+                            <tr>
+                                <th>Model</th>
+                                <td>{data.model}</td>
+                            </tr>
+                            <tr>
+                                <th>Vehicle Number</th>
+                                <td>{data.vehicle_number}</td>
+                            </tr>
+                            <tr>
+                                <th>KMs Driven</th>
+                                <td>{data.kms_driven}</td>
+                            </tr>
+                            <tr>
+                                <th>Price</th>
+                                <td>₹ {data.price}</td>
+                            </tr>
+                            <tr>
+                                <th>No. of Tyres</th>
+                                <td>{data.no_of_tyres}</td>
+                            </tr>
+                            <tr>
+                                <th>Tonnage</th>
+                                <td>{data.tonnage}</td>
+                            </tr>
+                            <tr>
+                                <th>Truck Body Type</th>
+                                <td>{data.truck_body_type}</td>
+                            </tr>
+                            <tr>
+                                <th>Location</th>
+                                <td>{data.location}</td>
+                            </tr>
+                            <tr>
+                                <th>Last Updated</th>
+                                <td>{data.updt ? data.updt.slice(5, 25) : ''}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
                 <h4 className="title-2">Description</h4>
                 <p>{data.description}</p>
 
@@ -282,6 +299,34 @@ const Product_Details = () => {
 				<div className="property-details-google-map mb-60">
 					<iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d9334.271551495209!2d-73.97198251485975!3d40.668170674982946!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c25b0456b5a2e7%3A0x68bdf865dda0b669!2sBrooklyn%20Botanic%20Garden%20Shop!5e0!3m2!1sen!2sbd!4v1590597267201!5m2!1sen!2sbd" width="100%" height="100%" frameBorder={0} allowFullScreen aria-hidden="false" tabIndex={0} />
 				</div>  */}
+
+                {/* send message modal  */}
+                <div className="modal fade" id="sendMessageModal" data-bs-backdrop="static" data-bs-keyboard="false" tabIndex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                    <div className={`modal-dialog modal-dialog-centered modal-dialog-scrollable modal-md`}>
+                        <div className="modal-content">
+                            <div className="modal-header bg-transparent border-0">
+                                <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close" id="clodesendMessageModal"></button>
+                            </div>
+                            <div className="modal-body">
+                                <div className="text-center py-3">
+                                    <h5 className='mb-3 d-inline-block text-secondary'>Do you want to send message to</h5>
+                                    {/* <p>{sendModalMessageData ? sendModalMessageData : ''}</p> */}
+                                    <h5 className='mb-1'>
+                                        <BsFilePerson className='me-2 text-secondary' />{sendModalMessageData ? sendModalMessageData.profile_name : ''}
+                                    </h5>
+                                </div>
+                            </div>
+                            <div className="modal-footer row border-top-0 bg-transparent">
+                                <div className="p-2 col">
+                                    <button type="button" className="btn btn-outline-primary" data-bs-dismiss="modal" aria-label="Close" id="clodesendMessageModal">Close</button>
+                                </div>
+                                <div className="p-2 col">
+                                    <button type="button" className="btn btn-primary" onClick={handleMessageClick}>message</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

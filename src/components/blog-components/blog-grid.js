@@ -12,11 +12,13 @@ import { Link, useNavigate } from "react-router-dom";
 import Select from "react-dropdown-select";
 import axiosInstance from "../../Services/axiosInstance";
 import { RiMapPinTimeFill } from "react-icons/ri";
+import { BsFilePerson } from "react-icons/bs";
 
 const BlogGrid = () => {
   const LoginDetails = useSelector((state) => state.login);
   const navigate = useNavigate();
 
+  const [sendModalMessageData, setSendModalMessageData] = useState({})
   const [initialLoading, setInitialLoading] = useState(false);
   const [cards, setCards] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -566,7 +568,7 @@ const BlogGrid = () => {
             <div className="row gy-4">
               <div className="col-12 col-md-6">
                 <h6>
-                  Vehicle Number 
+                  Vehicle Number
                   <Link
                     to={"/my_profile"}
                     className="cursor-pointer"
@@ -797,8 +799,24 @@ const BlogGrid = () => {
     }
   };
 
-  const handleMessageClick = (card) => {
-    navigate(`/chat?person_id=${card.user_id}`);
+  const handleMessageClick = async () => {
+    const userId = Cookies.get("usrin");
+    try {
+      const response = await axios.post(
+        "https://truck.truckmessage.com/get_user_chat_message_list", {
+        user_id: window.atob(userId),
+        person_id: sendModalMessageData.user_id,
+        ref_flag: 'Driver',
+        ref_id: sendModalMessageData.driver_id
+      });
+
+      if (response.data.error_code === 0) {
+        document.getElementById('clodesendMessageModal').click();
+        navigate(`/chat`);
+      }
+    } catch (error) {
+      console.error("Error fetching messages:", error);
+    }
   };
 
   const handleClearReset = () => {
@@ -919,9 +937,8 @@ const BlogGrid = () => {
         aria-hidden="true"
       >
         <div
-          className={`modal-dialog modal-dialog-centered modal-dialog-scrollable ${
-            aadharStep === 4 ? "modal-lg" : "modal-md"
-          }`}
+          className={`modal-dialog modal-dialog-centered modal-dialog-scrollable ${aadharStep === 4 ? "modal-lg" : "modal-md"
+            }`}
         >
           <div className="modal-content">
             <div className="modal-header">
@@ -1106,9 +1123,8 @@ const BlogGrid = () => {
                       {[...Array(5)].map((_, index) => (
                         <span key={index} className="float-right">
                           <i
-                            className={`text-warning fa fa-star ${
-                              index < card.rating ? "" : "text-muted"
-                            }`}
+                            className={`text-warning fa fa-star ${index < card.rating ? "" : "text-muted"
+                              }`}
                           ></i>
                         </span>
                       ))}
@@ -1233,13 +1249,7 @@ const BlogGrid = () => {
                             )}
                           </div>
                           <div className="col-6">
-                            <button
-                              className="btn cardbutton w-100"
-                              type="button"
-                              onClick={() => handleMessageClick(card)}
-                            >
-                              Message
-                            </button>
+                            <button className="btn cardbutton w-100" type="button" data-bs-toggle="modal" data-bs-target="#sendMessageModal" onClick={() => setSendModalMessageData(card)}>Message</button>
                           </div>
                         </div>
                       ) : (
@@ -1278,6 +1288,37 @@ const BlogGrid = () => {
               </li>
             ))}
           </ul>
+        </div>
+
+        {/* send message modal  */}
+        <div className="modal fade" id="sendMessageModal" data-bs-backdrop="static" data-bs-keyboard="false" tabIndex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+          <div className={`modal-dialog modal-dialog-centered modal-dialog-scrollable ${aadharStep === 4 ? 'modal-lg' : 'modal-md'}`}>
+            <div className="modal-content">
+              <div className="modal-header bg-transparent border-0">
+                <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close" id="clodesendMessageModal"></button>
+              </div>
+              <div className="modal-body">
+                <div className="text-center py-3">
+                  <h5 className='mb-3 d-inline-block text-secondary'>Do you want to send message to</h5>
+                  {/* <p>{sendModalMessageData ? sendModalMessageData : ''}</p> */}
+                  <h5 className='mb-1'>
+                    <BsFilePerson className='me-2 text-secondary' />{sendModalMessageData ? sendModalMessageData.profile_name : ''}
+                  </h5>
+                  <div className="col-lg-12 cardicontext">
+                    <label><HiOutlineOfficeBuilding className='me-2 text-secondary' />{sendModalMessageData ? sendModalMessageData.company_name : ''}</label>
+                  </div>
+                </div>
+              </div>
+              <div className="modal-footer row border-top-0 bg-transparent">
+                <div className="p-2 col">
+                  <button type="button" className="btn btn-outline-primary" data-bs-dismiss="modal" aria-label="Close" id="clodesendMessageModal">Close</button>
+                </div>
+                <div className="p-2 col">
+                  <button type="button" className="btn btn-primary" onClick={handleMessageClick}>message</button>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>

@@ -31,8 +31,8 @@ function App() {
         <Navbar />
         <Routes>
           <Route path="/" element={<Service />} />
-          <Route path="/my_profile" element={<Profile />} /> 
-          <Route path="/load-availability" element={<Loadavailablity />} /> 
+          <Route path="/my_profile" element={<Profile />} />
+          <Route path="/load-availability" element={<Loadavailablity />} />
           <Route path="/coming-soon" element={<ComingSoon />} />
           <Route path="/product-details" element={<ProdductDetails />} />
           <Route path="/blog-grid" element={<BlogGrid />} />
@@ -44,7 +44,7 @@ function App() {
           <Route path="/expense-calculator" element={<ExpenseCalculator />} />
           <Route path="/expense-details/:id" element={<ExpenseDetails />} />
           <Route path="/fuelprice" element={<FuelPrice />} />
-          <Route path="/chat" element={<ChatView />} />
+          <Route path="/chat" element={<ChatView />} /> 
           <Route path="/contact" element={<ContactV1 />} />
           <Route path="/wishlist" element={<Wishlist />}>
             <Route path="load" />

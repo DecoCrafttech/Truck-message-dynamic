@@ -10,6 +10,8 @@ import Cookies from 'js-cookie';
 import Autocomplete from "react-google-autocomplete";
 import { useNavigate } from 'react-router-dom';
 import { RiMapPinTimeFill } from "react-icons/ri";
+import Select from 'react-dropdown-select';
+import axiosInstance from '../../Services/axiosInstance';
 
 
 const PortfolioV1 = () => {
@@ -29,6 +31,8 @@ const PortfolioV1 = () => {
     const [initialLoading, setInitialLoading] = useState(false);
     const [submitLoadLoading, setSubmitLoadLoading] = useState(false);
     const [filterButtonLoading, setfilterButtonLoading] = useState(false);
+    const [userStateList, setUserStateList] = useState([]);
+    const [selectToLocationMultiple, setSelectToLocationMultiple] = useState([]);
 
     const [filters, setFilters] = useState({
         search: '',
@@ -61,6 +65,35 @@ const PortfolioV1 = () => {
     const [aadharStep, setAadharStep] = useState(1);
     const [otpNumber, setOtpNumber] = useState("");
     const [selectedContactNum, setSelectedContactNum] = useState(null);
+
+    const getUserStateList = async () => {
+        try {
+            const userId = window.atob(Cookies.get("usrin"));
+            const data = {
+                user_id: userId,
+            };
+
+            const res = await axiosInstance.post("/get_user_state_list", data);
+
+            if (res.data.error_code === 0) {
+                if (res.data.data) {
+                    const convertToSelect = res.data.data[0].state_list.map(
+                        (val, ind) => {
+                            return { value: ind + 1, label: val };
+                        }
+                    );
+                    setUserStateList(convertToSelect);
+                } else {
+                    setUserStateList([]);
+                }
+            } else {
+                setUserStateList([]);
+            }
+        } catch (err) {
+            console.log(err);
+        }
+    };
+
 
     const fetchData = async () => {
         setInitialLoading(true)
@@ -95,7 +128,8 @@ const PortfolioV1 = () => {
     }
 
     useEffect(() => {
-        fetchData()
+        fetchData();
+        getUserStateList();
     }, []);
 
     const handleFilterChange = (e) => {
@@ -233,10 +267,12 @@ const PortfolioV1 = () => {
     };
 
     const handleApplyFilter = async () => {
+        const spreadMultipleLocation = selectToLocationMultiple.map((v) => v.label);
+
         const filterObj = { ...filterModelData }
         filterObj.from_location = showingFromLocation
-        filterObj.to_location = showingToLocation
-        if (filterObj.from_location || filterObj.to_location || filterObj.truck_body_type || filterObj.no_of_tyres || filterObj.material || filterObj.tone) {
+        filterObj.to_location = spreadMultipleLocation;
+        if (filterObj.from_location || spreadMultipleLocation.length > 0 || filterObj.truck_body_type || filterObj.no_of_tyres || filterObj.material || filterObj.tone) {
             setfilterButtonLoading(true)
             try {
                 const res = await axios.post("https://truck.truckmessage.com/user_load_details_filter", filterObj, {
@@ -600,7 +636,7 @@ const PortfolioV1 = () => {
         navigate(`/chat?person_id=${card.user_id}`);
     };
 
-    const handleClearFilterReset = () =>{
+    const handleClearFilterReset = () => {
         fetchData()
         setShowingFromLocation("")
         setShowingToLocation("")
@@ -712,17 +748,13 @@ const PortfolioV1 = () => {
                                     </div>
                                     <div className="col-12 col-md-6">
                                         <h6>To</h6>
-                                        <div className="input-item input-item-name">
-                                            <Autocomplete name="to_location"
-                                                className="google-location location-input bg-transparent py-2 mb-0"
-                                                apiKey={process.env.REACT_APP_GOOGLE_PLACES_KEY}
-                                                onPlaceSelected={(place) => {
-                                                    if (place) {
-                                                        handleToLocation(place.address_components);
-                                                    }
-                                                }}
-                                            />
-                                        </div>
+                                        <Select
+                                            multi
+                                            create={true}
+                                            options={userStateList}
+                                            className="selectBox-innerWidth"
+                                            onChange={(e) => setSelectToLocationMultiple(e)}
+                                        />
                                     </div>
 
                                     <div className="col-12 col-md-6">

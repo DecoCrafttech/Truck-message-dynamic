@@ -816,6 +816,7 @@ const BlogGrid = () => {
       truck_name: "",
     });
     setShowingFromLocation("");
+    fetchData();
   };
 
   return (

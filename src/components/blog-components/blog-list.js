@@ -156,7 +156,7 @@ const BlogList = () => {
   const handleApplyFilter = async () => {
 
     const filterObj = { ...filterModelData };
-    filterObj.location = showingFromLocation;
+    filterObj.location = showingToLocation;
     if (filterModelData.kms_driven) {
       filterObj.kms_driven = `${filterObj.kms_driven} kms`;
     }
@@ -172,9 +172,9 @@ const BlogList = () => {
     if (filterModelData.brand) {
       filterObj.brand = [filterObj.brand];
     }
- 
+
     setIsDataFiltered(true);
-    if (filterObj.brand.length > 0 || filterObj.kms_driven || filterObj.model.length > 0 || filterObj.no_of_tyres.length > 0 || filterObj.price.length > 0 || filterObj.tonnage.length > 0 || filterObj.truck_body_type.length > 0) {
+    if (filterObj.location || filterObj.brand.length > 0 || filterObj.kms_driven || filterObj.model.length > 0 || filterObj.no_of_tyres.length > 0 || filterObj.price.length > 0 || filterObj.tonnage.length > 0 || filterObj.truck_body_type.length > 0) {
       try {
         setFilterLoading(true);
         const res = await axios.post(
@@ -408,7 +408,7 @@ const BlogList = () => {
     formData.append("vehicle_number", edit.vehicle_number);
     formData.append("truck_body_type", editingData.truck_body_type)
     formData.append("no_of_tyres", editingData.no_of_tyres)
-    formData.append("tonnage", editingData.tonnage !== '' ? `${editingData.tonnage} Ton ` : '')
+    formData.append("tonnage", editingData.tonnage !== '' ? `${editingData.tonnage} Ton` : '')
 
 
     if (editingData.tonnage.length > 0 && editingData.no_of_tyres && editingData.truck_body_type && edit.vehicle_number && edit.owner_name && edit.brand && edit.contact_no && edit.price && edit.kms_driven && showingBuyAndSellLocation && edit.model) {
@@ -1016,7 +1016,7 @@ const BlogList = () => {
     setSelectBoxTonnage(e)
     var edittTon = e.map((v) => v.label)
 
-    SetfilterModelData({ ...filterModelData, tonnage: edittTon })
+    SetfilterModelData({ ...filterModelData, tonnage: edittTon.length ? edittTon[0] : '' })
   }
 
   return (
@@ -1091,7 +1091,7 @@ const BlogList = () => {
 
                   <div className="col-12 px-0">
                     <h6>Tonnage</h6>
-                    <Select multi options={tonnage} values={selectBoxtonnage} onChange={handleApplyFilterTonnage} />
+                    <Select options={tonnage} values={selectBoxtonnage} onChange={handleApplyFilterTonnage} />
                   </div>
 
                   <div className="col-12 px-0">
@@ -1298,7 +1298,7 @@ const BlogList = () => {
 
             <div className="col-12 px-0">
               <h6>Tonnage</h6>
-              <Select multi options={tonnage} values={selectBoxtonnage} onChange={handleApplyFilterTonnage} />
+              <Select options={tonnage} values={selectBoxtonnage} onChange={handleApplyFilterTonnage} />
             </div>
 
             <div className="col-12 px-0">
@@ -1490,6 +1490,12 @@ const BlogList = () => {
                         key={card.buy_sell_id}
                       >
                         <div className="card card h-100 shadow truckcard">
+
+                          <div className="cardmodify py-1 py-3 m-2">
+                            <h5 className="mb-1 card-title text-wrap">{card.profile_name}</h5>
+                            
+                          </div>
+
                           <span className="object-fit-fill rounded justify-content-center d-flex">
                             <img
                               className="m-3 rounded-3 justify-content-center d-flex"
@@ -1522,9 +1528,7 @@ const BlogList = () => {
                                       <strong>Posts </strong> ({card.user_post})
                                     </p>
                                   </p>
-                                  <h5 className="card-title mt-2 text-wrap">
-                                    {card.profile_name}
-                                  </h5>
+                                  
                                   <h4 className="card-title mt-2 text-wrap">
                                     {card.brand}
                                   </h4>

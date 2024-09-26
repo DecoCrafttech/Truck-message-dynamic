@@ -408,7 +408,7 @@ const MyAccount = () => {
                     </div>
                   </div>
 
-                  <div className='col-12 col-md-6 col-xl-4'>
+                  <div className='col-12 col-md-6 col-xl-8'>
                     <div className="ltn-author-introducing clearfix mb-3 ps-5 ">
                       <div className="author-info ">
                         <h2>{userProfile.name || 'No Name'}</h2>
@@ -436,25 +436,49 @@ const MyAccount = () => {
                         </div>
                       </div>
 
-                      <button type="button" className="btn btn-primary mt-3" data-bs-toggle="modal" data-bs-target="#editProfileModal">
+                      <button type="button" className="btn btn-primary col-4 mt-3" data-bs-toggle="modal" data-bs-target="#editProfileModal">
                         Edit Profile
                       </button>
                     </div>
                   </div>
 
-                  <div className=' col-12 col-md-12 col-xl-4 d-inline-flex'>
+                  <div className=' col-12 col-md-12  d-inline-flex'>
                     <div className="ltn-author-introducing clearfix mb-3 px-3 w-100">
                       <div className='row align-items-center'>
-                        <div className="col-10">
-                          <div className="footer-address-icon"></div>
+                        <div className="col-12">
+                          <div className="footer-address-icon mb-2"><GrMapLocation className='me-3' /><strong>Operating States</strong></div>
                           <div className="footer-address-info text-break">
-                            <p> <GrMapLocation className='me-3' />{operatingStatesUi.length ? operatingStatesUi.join(',') : 'Operating states'}</p>
+                            {/* <p> {operatingStatesUi.length ? operatingStatesUi.join(',') : 'Operating states'}</p> */}
+
+
+                            {/* <div style={{ display: 'flex', flexWrap: 'wrap' }}>
+                              {operatingStatesUi.length ?
+                                operatingStatesUi.map((state, index) => (
+                                  <p key={index} style={{ margin: '5px' }}>{state}</p>
+                                ))
+                                : <p>Operating states</p>
+                              }
+                            </div> */}
+                            <div style={{ display: 'flex', flexWrap: 'wrap' }}>
+                              {operatingStatesUi.length ?
+                                operatingStatesUi.map((state, index) => (
+                                  <p key={index} style={{ margin: '5px' }}>
+                                    {state}{index !== operatingStatesUi.length - 1 && ','}
+                                  </p>
+                                ))
+                                : <p>Operating states</p>
+                              }
+                            </div>
+
+
+
+
                           </div>
                         </div>
 
-                        <div className="col-2 text-center">
-                          <button type="button" className="btn btn-sm text-decoration-underline" data-bs-toggle="modal" data-bs-target="#operatingStatesModel">
-                            Edit
+                        <div className="mt-4 text-center">
+                          <button type="button" className="btn btn-primary btn-sm text-decoration-none" data-bs-toggle="modal" data-bs-target="#operatingStatesModel">
+                            Add & Edit Operating States
                           </button>
                         </div>
                       </div>

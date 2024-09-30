@@ -177,7 +177,7 @@ const MyAccount = () => {
   const handleAddVehicle = () => {
     const encodedUserId = Cookies.get("usrin");
     console.log(vehicleData.length)
-    if (vehicleData.length < 7) {
+    if (vehicleData.length < 10) {
       if (encodedUserId) {
         setaddVehicleLoading(true);
         const userId = window.atob(encodedUserId);
@@ -206,7 +206,7 @@ const MyAccount = () => {
         toast.error('User ID not found in cookies.');
       }
     } else {
-      toast.error("You can't add more than 7 vehicles.");
+      toast.error("You can't add more than 10 vehicles.");
     }
   };
 
@@ -223,7 +223,6 @@ const MyAccount = () => {
         vehicle_no: vehicleToDelete,
       })
         .then(response => {
-          console.log(response.data.error_code === 0)
           if (response.data.error_code === 0) {
             setdeleteVehicleLoading(false)
             document.getElementById('closeDeleteModalButton').click();
@@ -239,22 +238,6 @@ const MyAccount = () => {
           setdeleteVehicleLoading(false)
         });
     }
-  };
-
-  const handleViewDetails = (vehicleNumber) => {
-    axios.post('https://truck.truckmessage.com/get_vehicle_details', {
-      vehicle_no: vehicleNumber,
-    })
-      .then(response => {
-        if (response.data.success) {
-          setSelectedVehicleDetails(response.data.data[0]);
-        } else {
-          toast.error('Failed to fetch vehicle details');
-        }
-      })
-      .catch(error => {
-        toast.error('Error fetching vehicle details:', error);
-      });
   };
 
   const handleUpdatePhoto = (e) => {

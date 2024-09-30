@@ -75,9 +75,6 @@ input[type="password"] {
     color: var(--white);
 }
 
-
-
-
 /*chat */
 
 .chat-container {
@@ -126,5 +123,3 @@ input[type="password"] {
     background: #eee;
     cursor: pointer;
   }
-  
-

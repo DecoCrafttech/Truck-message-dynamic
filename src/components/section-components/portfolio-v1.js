@@ -876,7 +876,6 @@ const PortfolioV1 = () => {
                         currentCards.length > 0 ?
                             <div className="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-5 mb-60 ">
                                 {currentCards.map((card, cardIndex) => {
-                                    console.log(card)
                                     return <div className="col " key={card.id}>
                                         <div className="card h-100 shadow truckcard">
                                             <div className='card-header border-0 mb-0 '>

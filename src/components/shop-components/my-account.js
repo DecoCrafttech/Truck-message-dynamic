@@ -35,8 +35,11 @@ const MyAccount = () => {
 
   const [operatingStateString, setoperatingStateString] = useState('')
   const [operatingStateStringdupli, setoperatingStateStringdupli] = useState('')
+  const [addVehicleLoading, setaddVehicleLoading] = useState(false);
+  const [deleteVehicleLoading, setdeleteVehicleLoading] = useState(false);
+
+
   const [checked, setChecked] = useState(false)
-  const [stateCitySelectedData, setstateCitySelectedData] = useState([])
 
   const LoginDetails = useSelector((state) => state.login);
   const pageRender = useNavigate();
@@ -86,20 +89,6 @@ const MyAccount = () => {
     }
   }
 
-  const handleFromLocation = (selectedLocation) => {
-    if (selectedLocation) {
-      const cityComponent = selectedLocation.find(component => component.types.includes('locality'));
-      const stateComponent = selectedLocation.find(component => component.types.includes('administrative_area_level_1'));
-
-      if (cityComponent && stateComponent) {
-        setoperatingStateStringdupli(`${cityComponent.long_name}, ${stateComponent.long_name}`)
-        setoperatingStateString(`${cityComponent.long_name}, ${stateComponent.long_name}`)
-      }
-    }
-  };
-
-
-
   const handleDeleteOperatingState = async (deletingValue) => {
     const encodedUserId = Cookies.get("usrin");
     if (encodedUserId) {
@@ -125,8 +114,6 @@ const MyAccount = () => {
     }
 
   }
-
-
 
   const handleCheckbox = async (e) => {
     setChecked(e.target.checked)
@@ -189,9 +176,10 @@ const MyAccount = () => {
 
   const handleAddVehicle = () => {
     const encodedUserId = Cookies.get("usrin");
-
-    if (vehicleData.length <= 10) {
+    console.log(vehicleData.length)
+    if (vehicleData.length < 7) {
       if (encodedUserId) {
+        setaddVehicleLoading(true);
         const userId = window.atob(encodedUserId);
 
         axios.post('https://truck.truckmessage.com/add_user_vehicle_details', {
@@ -199,23 +187,26 @@ const MyAccount = () => {
           vehicle_no: newVehicleNumber,
         })
           .then(response => {
-            if (response.data.success) {
+            if (response.data.error_code == 0) {
               setNewVehicleNumber('');
               fetchUserProfile();
               document.getElementById('closeModalButton').click();
-              toast.success('Vehicle added successfully!');
+              toast.success("vehicle added successfully");
             } else {
-              toast.error('Failed to add vehicle');
+              toast.error(response.data.message);
             }
+            setaddVehicleLoading(false);
           })
           .catch(error => {
             toast.error('Error adding vehicle: ' + error.message);
+            setaddVehicleLoading(false);
           });
+
       } else {
         toast.error('User ID not found in cookies.');
       }
     } else {
-      toast.error("You can't add more than 10 vehicles.");
+      toast.error("You can't add more than 7 vehicles.");
     }
   };
 
@@ -225,22 +216,27 @@ const MyAccount = () => {
     const encodedUserId = Cookies.get("usrin");
     if (encodedUserId) {
       const userId = window.atob(encodedUserId);
+      setdeleteVehicleLoading(true)
 
       axios.post('https://truck.truckmessage.com/remove_user_vehicle_details', {
         user_id: userId,
         vehicle_no: vehicleToDelete,
       })
         .then(response => {
-          if (response.data.success) {
+          console.log(response.data.error_code === 0)
+          if (response.data.error_code === 0) {
+            setdeleteVehicleLoading(false)
+            document.getElementById('closeDeleteModalButton').click();
             setVehicleToDelete(null);
             fetchUserProfile();
-            document.getElementById('closeDeleteModalButton').click();
           } else {
-            toast.error('Failed to delete vehicle');
+            setdeleteVehicleLoading(false)
+            toast.error(response.data.message);
           }
         })
         .catch(error => {
           toast.error('Error deleting vehicle:', error);
+          setdeleteVehicleLoading(false)
         });
     }
   };
@@ -576,10 +572,25 @@ const MyAccount = () => {
                             <input type="text" className="form-control" id="vehicleNumberInput" value={newVehicleNumber} onChange={(e) => setNewVehicleNumber(e.target.value)} />
                           </div>
                         </div>
-                        <div className="modal-footer">
-                          <button type="button" className="btn btn-primary" onClick={handleAddVehicle}>Add Vehicle</button>
-                          <button type="button" className="btn btn-secondary" data-bs-dismiss="modal" id="closeModalButton">Close</button>
+                        <div className="modal-footer d-flex flex-wrap">
+                          <div className="col-6 m-0">
+                            <button type="button" className="btn btn-secondary" data-bs-dismiss="modal" id="closeModalButton">Close</button>
+                          </div>
 
+                          {
+                            addVehicleLoading ?
+                              <div className="col-6 m-0">
+                                <button type="button" className='btn btn-primary pe-none'>
+                                  <div className="spinner-border text-white" role="status">
+                                    <span className="sr-only">Saving...</span>
+                                  </div>
+                                </button>
+                              </div>
+                              :
+                              <div className="col-6 m-0">
+                                <button type="button" className="btn btn-primary" onClick={handleAddVehicle}>Add Vehicle</button>
+                              </div>
+                          }
                         </div>
                       </div>
                     </div>
@@ -587,19 +598,39 @@ const MyAccount = () => {
 
                   {/* Delete Vehicle Confirmation Modal */}
                   <div className="modal fade" id="deleteVehicleModal" tabIndex="-1" aria-labelledby="deleteVehicleModalLabel" aria-hidden="true">
-                    <div className="modal-dialog">
+                    <div className="modal-dialog modal-dialog-centered">
                       <div className="modal-content">
                         <div className="modal-header">
                           <h5 className="modal-title" id="deleteVehicleModalLabel">Delete Vehicle</h5>
-                          <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                          <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close" id="closeDeleteModalButton"></button>
                         </div>
-                        <div className="modal-body">
-                          Are you sure you want to delete the vehicle {vehicleToDelete}?
+                        <div className="modal-body py-5 px-2">
+                          <p className='text-center'>
+                            Are you sure you want to delete the vehicle {vehicleToDelete}?
+                          </p>
                         </div>
-                        <div className="modal-footer">
-                          <button type="button" className="btn btn-secondary" data-bs-dismiss="modal" id="closeDeleteModalButton">Cancel</button>
-                          <button type="button" className="btn btn-danger" onClick={handleDeleteVehicle}>Delete</button>
+
+                        <div className="modal-footer d-flex flex-wrap">
+                          <div className="col-6 m-0">
+                            <button type="button" className="btn btn-secondary" data-bs-dismiss="modal" id="closeModalButton">Close</button>
+                          </div>
+
+                          {
+                            deleteVehicleLoading ?
+                              <div className="col-6 m-0">
+                                <button type="button" className='btn btn-primary pe-none'>
+                                  <div className="spinner-border text-white" role="status">
+                                    <span className="sr-only">Deleting...</span>
+                                  </div>
+                                </button>
+                              </div>
+                              :
+                              <div className="col-6 m-0">
+                                <button type="button" className="btn btn-primary" onClick={handleDeleteVehicle}>Delete</button>
+                              </div>
+                          }
                         </div>
+
                       </div>
                     </div>
                   </div>

@@ -1583,8 +1583,8 @@ const TruckAvailability = () => {
                       <h5 className="mb-1">{card.profile_name}</h5>
                       <div className="col-lg-12 cardicontext">
                         <label>
-                          <HiOutlineOfficeBuilding className="me-2" />
-                          {card.company_name}
+                          <GiTruck className="me-2" />
+                          {card.name_of_the_transport}
                         </label>
                       </div>
                     </div>
@@ -1654,8 +1654,8 @@ const TruckAvailability = () => {
                       </div>
                       <div className="col-lg-6 cardicontext">
                         <label>
-                          <GiTruck className="me-2" />
-                          {card.name_of_the_transport}
+                          <HiOutlineOfficeBuilding className="me-2" />
+                          {card.company_name}
                         </label>
                       </div>
                     </div>
@@ -1741,7 +1741,7 @@ const TruckAvailability = () => {
                 <button
                   type="button"
                   className="btn btn-primary col-12 col-md-6 col-lg-4 col-xl-3"
-                  onClick={()=>navigate("/load-availability?add_load=true")}
+                  onClick={() => navigate("/load-availability?add_load=true")}
                 >
                   Click here to Add Load
                 </button>

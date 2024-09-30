@@ -20,6 +20,7 @@ import TollCalculator from "./components/TollCalculator";
 import ChatView from "./components/Chat/Chat";
 import TeamDetails from "./components/team-details";
 import ContactV1 from "./components/contact";
+import Page_header from "./components/global-components/page-header";
 
 function App() {
 
@@ -29,6 +30,7 @@ function App() {
 
       <BrowserRouter basename={process.env.PUBLIC_URL}>
         <Navbar />
+        <Page_header/>
         <Routes>
           <Route path="/" element={<Service />} />
           <Route path="/my_profile" element={<Profile />} />

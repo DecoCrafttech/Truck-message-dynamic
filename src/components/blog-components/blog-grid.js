@@ -76,6 +76,8 @@ const BlogGrid = () => {
   const [vehicleList, setVehicleList] = useState([]);
   const [showingFromLocation, setShowingFromLocation] = useState("");
   const [showingToLocation, setShowingToLocation] = useState("");
+  const [selectedContactIndex, setSelectedContactIndex] = useState(null);
+
 
   const getVehicleList = async () => {
     const userId = Cookies.get("usrin")
@@ -191,13 +193,15 @@ const BlogGrid = () => {
     });
   };
 
-  const handleCopy = (contactNo, cardId) => {
+  const handleCopy = (contactNo, cardId,index) => {
     setSelectedContactNum(null);
+    setSelectedContactIndex(null)
 
     setviewContactId(cardId);
     setTimeout(() => {
       setSelectedContactNum(contactNo);
       setviewContactId(null);
+      setSelectedContactIndex(index)
     }, 800);
   };
 
@@ -333,7 +337,7 @@ const BlogGrid = () => {
     filterObj.from_location = showingFromLocation;
     filterObj.to_location = spreadMultipleLocation;
     if (
-      filterModelData.from_location ||
+      showingFromLocation ||
       spreadMultipleLocation.length > 0 ||
       filterModelData.truck_body_type ||
       filterModelData.no_of_tyres
@@ -1114,7 +1118,7 @@ const BlogGrid = () => {
               </div>
             </div>
           ) : (
-            currentCards.map((card) => (
+            currentCards.map((card,cardIndex) => (
               <div className="col" key={card.id}>
                 <div className="card h-100 shadow truckcard">
                   <div className="card-header border-0 mb-0 ">
@@ -1227,8 +1231,7 @@ const BlogGrid = () => {
                                   <span className="sr-only">Loading...</span>
                                 </div>
                               </button>
-                            ) : selectedContactNum &&
-                              card.contact_no === selectedContactNum ? (
+                            ) : cardIndex === selectedContactIndex ? (
                               <button
                                 className="btn btn-success w-100"
                                 type="button"
@@ -1240,7 +1243,7 @@ const BlogGrid = () => {
                                 className="btn btn-success w-100"
                                 type="button"
                                 onClick={() =>
-                                  handleCopy(card.contact_no, card.id)
+                                  handleCopy(card.contact_no, card.id,cardIndex)
                                 }
                               >
                                 {/* <FaRegCopy className='me-2' /> */}

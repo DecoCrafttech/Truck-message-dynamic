@@ -1467,17 +1467,6 @@ const WishList = () => {
                         onClick={() =>
                           setEditingData({
                             ...editingData,
-                            truck_body_type: "Tanker",
-                          })
-                        }
-                        className="cup mt-0 py-2 dropdown-list-hover"
-                      >
-                        <a class="dropdown-item text-decoration-none">Tanker</a>
-                      </li>
-                      <li
-                        onClick={() =>
-                          setEditingData({
-                            ...editingData,
                             truck_body_type: "Trailer",
                           })
                         }
@@ -2057,17 +2046,6 @@ const WishList = () => {
                           Trailer
                         </a>
                       </li>
-                      <li
-                        onClick={() =>
-                          setEditingData({
-                            ...editingData,
-                            truck_body_type: "Tanker",
-                          })
-                        }
-                        className="cup mt-0 py-2 dropdown-list-hover"
-                      >
-                        <a class="dropdown-item text-decoration-none">Tanker</a>
-                      </li>
                     </ul>
                   </div>
 
@@ -2256,7 +2234,7 @@ const WishList = () => {
                   </div>
 
                   <div className="col-12 col-md-6">
-                    <h6></h6>
+                    <h6>Owner name</h6>
                     <div className="input-item input-item-name">
                       <input
                         type="text"
@@ -2436,15 +2414,6 @@ const WishList = () => {
                       />
                     </div>
                   </div>
-                </div>
-                <div className="modal-footer btn-wrapper text-center mt-4">
-                  <button
-                    className="btn btn-primary text-uppercase"
-                    type="button"
-                    onClick={handleChooseUpdate}
-                  >
-                    Submit
-                  </button>
                 </div>
               </div>
             </div>

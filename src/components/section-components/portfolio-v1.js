@@ -8,7 +8,7 @@ import { GiCarWheel } from "react-icons/gi";
 import { useSelector } from 'react-redux';
 import Cookies from 'js-cookie';
 import Autocomplete from "react-google-autocomplete";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { RiMapPinTimeFill } from "react-icons/ri";
 import Select from 'react-dropdown-select';
 import axiosInstance from '../../Services/axiosInstance';
@@ -20,6 +20,7 @@ const PortfolioV1 = () => {
 
     const LoginDetails = useSelector((state) => state.login);
     const navigate = useNavigate();
+    const [params] = useSearchParams()
 
     const [cards, setCards] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
@@ -66,6 +67,19 @@ const PortfolioV1 = () => {
     const [aadharStep, setAadharStep] = useState(1);
     const [otpNumber, setOtpNumber] = useState("");
     const [selectedContactNum, setSelectedContactNum] = useState(null);
+    const [selectedContactIndex, setSelectedContactIndex] = useState(null);
+
+    useEffect(() => {
+        if (params.get("add_load")) {
+          document.getElementById("addloadavailabilitybutton").click();
+    
+          var uri = window.location.toString();
+          if (uri.indexOf("?") > 0) {
+            var clean_uri = uri.substring(0, uri.indexOf("?"));
+            window.history.replaceState({}, document.title, clean_uri);
+          }
+        }
+      }, [])
 
     const getUserStateList = async () => {
         try {
@@ -139,13 +153,16 @@ const PortfolioV1 = () => {
         });
     };
 
-    const handleCopy = (contactNo, cardId) => {
+    const handleCopy = (contactNo, cardId, index) => {
         setSelectedContactNum(null)
+        setSelectedContactIndex(null)
+
 
         setviewContactId(cardId)
         setTimeout(() => {
             setSelectedContactNum(contactNo)
             setviewContactId(null)
+            setSelectedContactIndex(index)
         }, 800)
     };
 
@@ -639,11 +656,11 @@ const PortfolioV1 = () => {
         try {
             const response = await axios.post(
                 "https://truck.truckmessage.com/get_user_chat_message_list", {
-                    user_id: window.atob(userId),
-                    person_id: sendModalMessageData.user_id,
-                    ref_flag: 'Load',
-                    ref_id: sendModalMessageData.load_id
-                });
+                user_id: window.atob(userId),
+                person_id: sendModalMessageData.user_id,
+                ref_flag: 'Load',
+                ref_id: sendModalMessageData.load_id
+            });
 
             if (response.data.error_code === 0) {
                 document.getElementById('clodesendMessageModal').click();
@@ -687,7 +704,7 @@ const PortfolioV1 = () => {
                                     <div >
                                         {/* <Link to="/add-listing"> + Add Load availability</Link> */}
                                         {LoginDetails.isLoggedIn ? (
-                                            <button type="button " className='cardbutton truck-brand-button ' data-bs-toggle="modal" data-bs-target="#addloadavailability" onClick={handleloadAvailabilityModelOpen}>+ Add Load availability</button>
+                                            <button type="button " className='cardbutton truck-brand-button ' data-bs-toggle="modal" data-bs-target="#addloadavailability" id="addloadavailabilitybutton" onClick={handleloadAvailabilityModelOpen}>+ Add Load availability</button>
 
                                         ) :
                                             <button type="button " className='cardbutton truck-brand-button ' data-bs-toggle="modal" data-bs-target="#loginModal">+ Add Load availability</button>
@@ -761,6 +778,8 @@ const PortfolioV1 = () => {
                                                         handleFromLocation(place.address_components);
                                                     }
                                                 }}
+                                                value={showingFromLocation}
+                                                onChange={(e) => setShowingFromLocation(e.target.value)}
                                             />
                                         </div>
                                     </div>
@@ -856,8 +875,9 @@ const PortfolioV1 = () => {
                         :
                         currentCards.length > 0 ?
                             <div className="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-5 mb-60 ">
-                                {currentCards.map(card => (
-                                    <div className="col " key={card.id}>
+                                {currentCards.map((card, cardIndex) => {
+                                    console.log(card)
+                                    return <div className="col " key={card.id}>
                                         <div className="card h-100 shadow truckcard">
                                             <div className='card-header border-0 mb-0 '>
                                                 <p className='.fs-6 reviewtext '>
@@ -935,7 +955,7 @@ const PortfolioV1 = () => {
                                                                         </button>
                                                                         :
 
-                                                                        selectedContactNum && card.contact_no === selectedContactNum ?
+                                                                        cardIndex === selectedContactIndex ?
                                                                             <button
                                                                                 className="btn btn-success w-100"
                                                                                 type="button">
@@ -945,7 +965,7 @@ const PortfolioV1 = () => {
                                                                             <button
                                                                                 className="btn btn-success w-100"
                                                                                 type="button"
-                                                                                onClick={() => handleCopy(card.contact_no, card.id)}>
+                                                                                onClick={() => handleCopy(card.contact_no, card.id, cardIndex)}>
                                                                                 Contact
                                                                             </button>
                                                                 }
@@ -963,7 +983,7 @@ const PortfolioV1 = () => {
                                             </div>
                                         </div>
                                     </div>
-                                ))}
+                                })}
                             </div>
                             :
                             <div className='row justify-content-center align-items-center emptyCardHeight'>
@@ -972,9 +992,9 @@ const PortfolioV1 = () => {
                                     <p>No Data Available</p>
 
                                     {LoginDetails.isLoggedIn ?
-                                        <button type="button" className='btn btn-primary col-12 col-md-6 col-lg-4 col-xl-3' data-bs-toggle="modal" data-bs-target="#addloadavailability" onClick={handleloadAvailabilityModelOpen}>Click here to Add Load</button>
+                                        <button type="button" className='btn btn-primary col-12 col-md-6 col-lg-4 col-xl-3' onClick={()=>navigate("/blog-details?add_truck=true")}>Click here to Add Truck</button>
                                         :
-                                        <button type="button " className='btn btn-primary col-12 col-md-6 col-lg-4 col-xl-3' data-bs-toggle="modal" data-bs-target="#loginModal">Click here to Add Load</button>
+                                        <button type="button " className='btn btn-primary col-12 col-md-6 col-lg-4 col-xl-3' data-bs-toggle="modal" data-bs-target="#loginModal">Click here to Add Truck</button>
                                     }
 
                                 </div>

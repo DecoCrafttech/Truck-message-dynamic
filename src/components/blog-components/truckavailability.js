@@ -9,7 +9,7 @@ import {
 } from "react-icons/fa6";
 import { SiMaterialformkdocs } from "react-icons/si";
 import { GiCarWheel, GiTruck } from "react-icons/gi";
-import { Link, useNavigate } from "react-router-dom"; // Assuming you are using react-router for navigation
+import { Link, useNavigate, useParams, useSearchParams } from "react-router-dom"; // Assuming you are using react-router for navigation
 import { useSelector } from "react-redux";
 import Cookies from "js-cookie";
 import Autocomplete from "react-google-autocomplete";
@@ -23,6 +23,7 @@ const TruckAvailability = () => {
   let publicUrl = process.env.PUBLIC_URL + "/";
 
   const LoginDetails = useSelector((state) => state.login);
+  const [params] = useSearchParams()
   const [sendModalMessageData, setSendModalMessageData] = useState({})
   const [initialLoading, setInitialLoading] = useState(false);
   const navigate = useNavigate();
@@ -34,6 +35,18 @@ const TruckAvailability = () => {
   const [filters, setFilters] = useState({
     search: "",
   });
+
+  useEffect(() => {
+    if (params.get("add_truck")) {
+      document.getElementById("addtruckavailabilityButton").click();
+
+      var uri = window.location.toString();
+      if (uri.indexOf("?") > 0) {
+        var clean_uri = uri.substring(0, uri.indexOf("?"));
+        window.history.replaceState({}, document.title, clean_uri);
+      }
+    }
+  }, [])
 
 
   const [aadharNumber, setAadharNumber] = useState("");
@@ -87,6 +100,7 @@ const TruckAvailability = () => {
   const [contactError, setContactError] = useState(""); // State to manage contact number validation error
 
   const [selectedContactNum, setSelectedContactNum] = useState(null);
+  const [selectedContactIndex, setSelectedContactIndex] = useState(null);
   const [viewContactId, setviewContactId] = useState(null);
 
   const getVehicleList = async () => {
@@ -187,13 +201,15 @@ const TruckAvailability = () => {
     getUserStateList();
   }, []);
 
-  const handleCopy = (contactNo, cardId) => {
+  const handleCopy = (contactNo, cardId, index) => {
     setSelectedContactNum(null);
+    setSelectedContactIndex(null)
 
     setviewContactId(cardId);
     setTimeout(() => {
       setSelectedContactNum(contactNo);
       setviewContactId(null);
+      setSelectedContactIndex(index)
     }, 800);
   };
 
@@ -363,7 +379,7 @@ const TruckAvailability = () => {
     filterObj.from_location = showingFromLocation;
     filterObj.to_location = spreadMultipleLocation;
     if (
-      filterModelData.from_location ||
+      showingFromLocation ||
       spreadMultipleLocation.length > 0 ||
       filterModelData.truck_body_type ||
       filterModelData.no_of_tyres ||
@@ -1092,6 +1108,7 @@ const TruckAvailability = () => {
                         data-bs-toggle="modal"
                         data-bs-target="#addtruckavailability"
                         onClick={handleTruckAvailabilityModelOpen}
+                        id="addtruckavailabilityButton"
                       >
                         + Add Truck availability
                       </button>
@@ -1541,7 +1558,7 @@ const TruckAvailability = () => {
           </div>
         ) : currentCards.length > 0 ? (
           <div className="row row-cols-1 row-cols-md-3 g-4 mb-60">
-            {currentCards.map((card) => (
+            {currentCards.map((card, cardIndex) => (
               <div className="col" key={card.id}>
                 <div className="card h-100 shadow truckcard">
                   <div className="card-header border-0 mb-0 ">
@@ -1668,8 +1685,7 @@ const TruckAvailability = () => {
                                   <span className="sr-only">Loading...</span>
                                 </div>
                               </button>
-                            ) : selectedContactNum &&
-                              card.contact_no === selectedContactNum ? (
+                            ) : cardIndex === selectedContactIndex ? (
                               <button
                                 className="btn btn-success w-100"
                                 type="button"
@@ -1681,7 +1697,7 @@ const TruckAvailability = () => {
                                 className="btn btn-success w-100"
                                 type="button"
                                 onClick={() =>
-                                  handleCopy(card.contact_no, card.id)
+                                  handleCopy(card.contact_no, card.id, cardIndex)
                                 }
                               >
                                 {/* <FaRegCopy className='me-2' /> */}
@@ -1725,9 +1741,7 @@ const TruckAvailability = () => {
                 <button
                   type="button"
                   className="btn btn-primary col-12 col-md-6 col-lg-4 col-xl-3"
-                  data-bs-toggle="modal"
-                  data-bs-target="#addtruckavailability"
-                  onClick={handleTruckAvailabilityModelOpen}
+                  onClick={()=>navigate("/load-availability?add_load=true")}
                 >
                   Click here to Add Load
                 </button>
@@ -1738,7 +1752,7 @@ const TruckAvailability = () => {
                   data-bs-toggle="modal"
                   data-bs-target="#loginModal"
                 >
-                  Click here to Add Truck
+                  Click here to Add Load
                 </button>
               )}
             </div>
